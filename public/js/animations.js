@@ -69,18 +69,29 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "HTML & CSS", category: "Frontend", desc: "Pixel-perfect layouts and responsive design.", percent: 95, icon: "devicon-css3-plain colored", img: "img stack/html and css.png" }
     ];
 
-    const skillTl = gsap.timeline({
-        scrollTrigger: {
-            trigger: "#skills-pin-container",
-            start: "top top",
-            end: "+=4000",
-            pin: true,
-            scrub: 1,
-            onUpdate: (self) => {
-                const progress = self.progress;
-                const index = Math.min(Math.floor(progress * skills.length), skills.length - 1);
-                updateSkillContent(index);
-            }
+    ScrollTrigger.matchMedia({
+        // Desktop
+        "(min-width: 1024px)": function() {
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#skills-pin-container",
+                    start: "top top",
+                    end: "+=4000",
+                    pin: true,
+                    scrub: 1,
+                    onUpdate: (self) => {
+                        const progress = self.progress;
+                        const index = Math.min(Math.floor(progress * skills.length), skills.length - 1);
+                        updateSkillContent(index);
+                    }
+                }
+            });
+        },
+        // Mobile (just show them or use a simpler scroll)
+        "(max-width: 1023px)": function() {
+            // On mobile, we could just show the first one or allow manual scroll
+            // For now, let's just make the container auto-height
+            gsap.set("#skills-pin-container", { height: "auto", minHeight: "100vh" });
         }
     });
 
