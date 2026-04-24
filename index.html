@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHIDESH V | Creative Developer Portfolio</title>
+    
+    <!-- Tailwind CSS (Play CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts — Syne + Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- GSAP + Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+    
+    <!-- Lottie Files -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
+    <!-- Lenis (Smooth Scroll) -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+    
+    <!-- Devicons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#FAF8F5',
+                        ink: '#1a1a1a',
+                        accent: '#E8572A',
+                        accentLight: '#FDF0EB',
+                        muted: '#6B6B6B',
+                        border: '#E5E2DD',
+                        cardBg: '#FFFFFF',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Syne', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-cream text-ink font-sans selection:bg-accent selection:text-white">
+
+    <!-- PAGE LOAD CURTAIN -->
+    <div id="loader" class="fixed inset-0 z-[100] bg-cream flex flex-col items-center justify-center">
+        <div class="relative flex flex-col items-center">
+            <div class="w-20 h-20 rounded-full border-2 border-accent flex items-center justify-center mb-6">
+                <span class="text-3xl font-bold text-accent font-serif">CV</span>
+            </div>
+            <div class="w-48 h-1 bg-border rounded-full overflow-hidden">
+                <div id="loader-bar" class="w-0 h-full bg-accent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM CURSOR -->
+    <div id="cursor-dot" class="fixed top-0 left-0 w-2 h-2 bg-accent rounded-full pointer-events-none z-[9999] hidden"></div>
+    <div id="cursor-ring" class="fixed top-0 left-0 w-10 h-10 border border-accent rounded-full pointer-events-none z-[9999] transition-transform duration-300 ease-out hidden"></div>
+
+    <!-- FIXED NAVIGATION -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-cream/80 backdrop-blur-md border-b border-border transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-white font-bold font-serif text-lg shadow-lg shadow-accent/20">
+                    CV
+                </div>
+                <span class="text-xl font-semibold tracking-tight hidden sm:block">CHIDESH V</span>
+            </div>
+            
+            <!-- Desktop Nav -->
+            <ul class="hidden md:flex items-center gap-8">
+                <li><a href="#home" class="nav-link relative py-1 hover:text-accent transition-colors">Home</a></li>
+                <li><a href="#skills" class="nav-link relative py-1 hover:text-accent transition-colors">Skills</a></li>
+                <li><a href="#projects" class="nav-link relative py-1 hover:text-accent transition-colors">Projects</a></li>
+                <li><a href="#cv" class="nav-link relative py-1 hover:text-accent transition-colors">CV</a></li>
+                <li><a href="#languages" class="nav-link relative py-1 hover:text-accent transition-colors">Languages</a></li>
+                <li><a href="#contact" class="nav-link relative py-1 hover:text-accent transition-colors">Contact</a></li>
+            </ul>
+
+            <div class="flex items-center gap-6">
+                <a href="#contact" class="hidden sm:inline-flex items-center px-6 py-2.5 bg-accent text-white rounded-full font-medium hover:scale-105 transition-transform shadow-lg shadow-accent/20">
+                    HIRE ME →
+                </a>
+                
+                <!-- Mobile Menu Toggle -->
+                <button id="mobile-menu-btn" class="md:hidden text-2xl">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Scroll Progress Bar -->
+        <div id="scroll-progress" class="absolute bottom-0 left-0 h-[2px] bg-accent w-0"></div>
+    </nav>
+
+    <!-- MOBILE MENU OVERLAY -->
+    <div id="mobile-menu" class="fixed inset-0 z-[60] bg-cream translate-x-full transition-transform duration-500 flex items-center justify-center">
+        <button id="close-menu-btn" class="absolute top-8 right-8 text-3xl">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <ul class="flex flex-col items-center gap-8 text-3xl font-serif font-bold uppercase tracking-tighter">
+            <li><a href="#home" class="mobile-nav-link hover:text-accent">Home</a></li>
+            <li><a href="#skills" class="mobile-nav-link hover:text-accent">Skills</a></li>
+            <li><a href="#projects" class="mobile-nav-link hover:text-accent">Projects</a></li>
+            <li><a href="#cv" class="mobile-nav-link hover:text-accent">CV</a></li>
+            <li><a href="#languages" class="mobile-nav-link hover:text-accent">Languages</a></li>
+            <li><a href="#contact" class="mobile-nav-link hover:text-accent">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- SECTION 1: HERO -->
+        <section id="home" class="min-h-screen flex items-center pt-20 overflow-hidden relative">
+            <div class="absolute inset-0 z-0 opacity-30 dot-grid"></div>
+            <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
+                
+                <!-- Left Column -->
+                <div class="flex flex-col justify-center">
+                    <h1 class="flex flex-col leading-[1.1]">
+                        <span class="hero-line text-lg text-muted font-light mb-2">Hi, I'm</span>
+                        <span class="hero-line text-5xl md:text-7xl font-serif font-bold text-ink mb-2 uppercase tracking-tighter">CHIDESH V</span>
+                        <span class="hero-line text-5xl md:text-7xl font-black text-ink mb-2 uppercase tracking-tighter">Creative</span>
+                        <span class="hero-line text-5xl md:text-7xl font-black text-transparent outline-text uppercase tracking-tighter">Developer<span class="text-accent">.</span></span>
+                    </h1>
+
+                    <div class="mt-8 text-2xl md:text-3xl font-medium text-ink/80 flex items-center gap-3">
+                        <span>I build →</span>
+                        <span id="typewriter" class="text-accent"></span>
+                    </div>
+
+                    <p class="mt-8 text-muted leading-relaxed max-w-lg text-lg">
+                        I am a passionate and detail-oriented professional with expertise in Python programming and machine learning. I have a solid understanding of data analysis tools, including Power BI and Excel, which I use to uncover insights and support data-driven decision-making. In addition to my technical skills, I am also a web and app developer, with experience in building responsive and user-friendly applications.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4 mt-10">
+                        <a href="#projects" class="px-8 py-4 bg-accent text-white rounded-full font-bold hover:shadow-xl hover:scale-105 transition-all shadow-lg shadow-accent/20">
+                            View My Work ↓
+                        </a>
+                        <a href="#" class="px-8 py-4 border-2 border-ink text-ink rounded-full font-bold hover:bg-ink hover:text-white transition-all">
+                            Download CV
+                        </a>
+                    </div>
+
+                    <div class="flex gap-6 mt-12 text-sm font-bold text-muted/60 uppercase tracking-widest">
+                        <div class="flex flex-col">
+                            <span class="text-2xl text-ink font-black">2+</span>
+                            <span>Project Exp</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-2xl text-ink font-black">10+</span>
+                            <span>Projects</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-2xl text-ink font-black">10+</span>
+                            <span>Certifications</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="relative flex justify-center items-center">
+                    <!-- Profile Frame -->
+                    <div class="relative w-[300px] h-[300px] md:w-[420px] md:h-[420px]">
+                        <!-- Background Blob -->
+                        <div class="absolute inset-[-10%] bg-accentLight/60 rounded-full blur-3xl blob-animation z-0"></div>
+                        
+                        <!-- Rotating Rings -->
+                        <div class="absolute inset-[-5%] border-2 border-dashed border-accent/30 rounded-full animate-spin-slow z-10"></div>
+                        <div class="absolute inset-[-10%] border-2 border-dashed border-accent/20 rounded-full animate-spin-slow-reverse z-10"></div>
+
+                        <!-- Main Image -->
+                        <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl z-20 profile-image-container">
+                            <img src="1756781067535.jpg" alt="CHIDESH V" class="w-full h-full object-cover sepia-[0.3]">
+                        </div>
+
+                        <!-- Floating Skill Badges -->
+                        <div class="skill-badge absolute -top-4 -right-4 bg-white p-3 rounded-2xl shadow-xl z-30 flex items-center gap-2 border border-border animate-float-1">
+                            <i class="devicon-react-original colored text-xl"></i>
+                            <span class="font-bold text-sm">React.js</span>
+                        </div>
+                        <div class="skill-badge absolute -bottom-4 -left-4 bg-white p-3 rounded-2xl shadow-xl z-30 flex items-center gap-2 border border-border animate-float-2">
+                            <i class="fa-solid fa-pen-nib text-accent"></i>
+                            <span class="font-bold text-sm">UI/UX</span>
+                        </div>
+                        <div class="skill-badge absolute top-1/2 -right-12 bg-white p-3 rounded-2xl shadow-xl z-30 flex items-center gap-2 border border-border animate-float-3">
+                            <i class="devicon-python-plain colored text-xl"></i>
+                            <span class="font-bold text-sm">Python</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- DIVIDER -->
+        <div class="divider container mx-auto px-6 py-10">
+            <div class="h-[1px] bg-border w-0 divider-line"></div>
+        </div>
+
+        <!-- SECTION 2: SKILLS -->
+        <section id="skills" class="min-h-screen py-20 relative">
+            <span class="absolute top-20 right-20 text-[200px] font-black text-ink opacity-[0.04] pointer-events-none leading-none hidden lg:block">02</span>
+            <!-- Background Lottie -->
+            <div class="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none z-0">
+                <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_at6p77er.json" background="transparent" speed="0.5" style="width: 100%; height: 100%;" loop autoplay></lottie-player>
+            </div>
+            <div class="container mx-auto px-6 mb-20 relative z-10">
+                <span class="text-accent font-bold uppercase tracking-widest text-sm">Competence</span>
+                <h2 class="text-6xl font-black mt-4">What I <span class="font-serif font-bold">Know</span></h2>
+                <p class="text-muted mt-4">Technologies & Tools I Work With Daily</p>
+            </div>
+
+            <!-- PINNED SKILLS SECTION -->
+            <div id="skills-pin-container" class="h-screen flex items-center overflow-hidden">
+                <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+                    <!-- Left: Info -->
+                    <div class="skill-info-column relative h-[400px]">
+                        <div class="skill-content absolute inset-0 flex flex-col justify-center">
+                            <span class="skill-category text-accent font-bold uppercase tracking-widest text-sm mb-4">Frontend</span>
+                            <h3 class="skill-name text-7xl font-serif italic mb-6">Web Development</h3>
+                            <p class="skill-desc text-muted text-lg mb-8 max-w-md">Crafting pixel-perfect, responsive layouts with modern CSS techniques.</p>
+                            
+                            <div class="flex items-center gap-6">
+                                <div class="relative w-32 h-32">
+                                    <svg class="w-full h-full transform -rotate-90">
+                                        <circle cx="64" cy="64" r="58" stroke="currentColor" stroke-width="8" fill="transparent" class="text-border" />
+                                        <circle id="skill-progress-circle" cx="64" cy="64" r="58" stroke="currentColor" stroke-width="8" fill="transparent" stroke-dasharray="364.4" stroke-dashoffset="364.4" class="text-accent transition-all duration-1000" />
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span id="skill-percent" class="text-2xl font-black">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Visual -->
+                    <div class="skill-visual-column flex items-center justify-center">
+                        <div class="relative w-64 h-64 bg-accentLight/30 rounded-[40px] flex items-center justify-center shadow-inner overflow-hidden">
+                            <img id="skill-img-init" src="img stack/web dev.webp" class="w-full h-full object-cover rounded-[40px] absolute inset-0">
+                            <i id="skill-icon" class="hidden text-[140px] drop-shadow-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM TOOLS -->
+            <div class="container mx-auto px-6 mt-20">
+                <div class="flex flex-wrap justify-center gap-4">
+                    <span class="tool-bubble px-6 py-3 rounded-full bg-white border border-border font-bold hover:bg-accent hover:text-white hover:border-accent transition-all cursor-default">Python</span>
+                    <span class="tool-bubble px-6 py-3 rounded-full bg-white border border-border font-bold hover:bg-accent hover:text-white hover:border-accent transition-all cursor-default">Java/DSA</span>
+                    <span class="tool-bubble px-6 py-3 rounded-full bg-white border border-border font-bold hover:bg-accent hover:text-white hover:border-accent transition-all cursor-default">Machine Learning</span>
+                    <span class="tool-bubble px-6 py-3 rounded-full bg-white border border-border font-bold hover:bg-accent hover:text-white hover:border-accent transition-all cursor-default">Power BI</span>
+                    <span class="tool-bubble px-6 py-3 rounded-full bg-white border border-border font-bold hover:bg-accent hover:text-white hover:border-accent transition-all cursor-default">MS-Office</span>
+                    <span class="tool-bubble px-6 py-3 rounded-full bg-white border border-border font-bold hover:bg-accent hover:text-white hover:border-accent transition-all cursor-default">Stock Marketing</span>
+                    <span class="tool-bubble px-6 py-3 rounded-full bg-white border border-border font-bold hover:bg-accent hover:text-white hover:border-accent transition-all cursor-default">Tailwind CSS</span>
+                    <span class="tool-bubble px-6 py-3 rounded-full bg-white border border-border font-bold hover:bg-accent hover:text-white hover:border-accent transition-all cursor-default">Firebase</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIVIDER -->
+        <div class="divider container mx-auto px-6 py-10">
+            <div class="h-[1px] bg-border w-0 divider-line"></div>
+        </div>
+
+        <!-- SECTION 3: PROJECTS -->
+        <section id="projects" class="py-20 bg-cream relative">
+            <span class="absolute top-20 right-20 text-[200px] font-black text-ink opacity-[0.04] pointer-events-none leading-none hidden lg:block">03</span>
+            <div class="container mx-auto px-6 mb-20">
+                <span class="text-accent font-bold uppercase tracking-widest text-sm">Portfolio</span>
+                <h2 class="text-6xl font-black mt-4">Selected <span class="font-serif font-bold">Work</span></h2>
+                <p class="text-muted mt-4">Projects I've Built & Shipped</p>
+            </div>
+
+            <div id="projects-container" class="relative">
+                <!-- Project 1 -->
+                <div class="project-card sticky top-20 w-full h-[90vh] px-6 pb-20 flex items-center justify-center">
+                    <div class="w-full h-full bg-[#FDF8F5] rounded-[40px] shadow-2xl border border-border overflow-hidden flex flex-col md:flex-row relative">
+                        <span class="absolute top-10 left-10 text-[180px] font-black text-ink opacity-[0.04] pointer-events-none leading-none">01</span>
+                        <div class="md:w-3/5 p-12 md:p-20 flex flex-col justify-center relative z-10">
+                            <div class="flex gap-2 mb-6">
+                                <span class="px-4 py-1.5 rounded-full bg-accent text-white text-xs font-bold uppercase">React</span>
+                                <span class="px-4 py-1.5 rounded-full bg-accent text-white text-xs font-bold uppercase">UI/UX</span>
+                            </div>
+                            <h3 class="text-5xl md:text-6xl font-serif font-bold mb-6">DEVFLOW</h3>
+                            <p class="text-muted text-lg mb-10 leading-relaxed max-w-md">A real-time dashboard for developers to track tasks, commits, and deployment status.</p>
+                            <div class="flex items-center gap-6 mb-10">
+                                <i class="devicon-react-original colored text-3xl"></i>
+                                <i class="devicon-nodejs-plain colored text-3xl"></i>
+                                <i class="devicon-mongodb-plain colored text-3xl"></i>
+                            </div>
+                            <a href="#" class="px-8 py-3 border-2 border-accent text-accent rounded-full font-bold hover:bg-accent hover:text-white transition-all w-fit">
+                                View Project →
+                            </a>
+                        </div>
+                        <div class="md:w-2/5 h-64 md:h-full bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center p-12">
+                            <div class="w-full h-full rounded-2xl bg-white shadow-2xl mockup-visual relative overflow-hidden flex flex-col">
+                                <div class="h-6 bg-border w-full flex items-center px-3 gap-1">
+                                    <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                                    <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                                    <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                                </div>
+                                <div class="p-4 grid grid-cols-2 gap-4">
+                                    <div class="h-20 bg-accentLight rounded-xl"></div>
+                                    <div class="h-20 bg-accentLight rounded-xl"></div>
+                                    <div class="h-32 col-span-2 bg-accentLight rounded-xl"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card sticky top-24 w-full h-[90vh] px-6 pb-20 flex items-center justify-center">
+                    <div class="w-full h-full bg-[#F5F8FD] rounded-[40px] shadow-2xl border border-border overflow-hidden flex flex-col md:flex-row relative">
+                        <span class="absolute top-10 left-10 text-[180px] font-black text-ink opacity-[0.04] pointer-events-none leading-none">02</span>
+                        <div class="md:w-3/5 p-12 md:p-20 flex flex-col justify-center relative z-10">
+                            <div class="flex gap-2 mb-6">
+                                <span class="px-4 py-1.5 rounded-full bg-blue-500 text-white text-xs font-bold uppercase">Python</span>
+                                <span class="px-4 py-1.5 rounded-full bg-blue-500 text-white text-xs font-bold uppercase">AI</span>
+                            </div>
+                            <h3 class="text-5xl md:text-6xl font-serif font-bold mb-6">LUMINA</h3>
+                            <p class="text-muted text-lg mb-10 leading-relaxed max-w-md">Browser-based image enhancement using machine learning models running client-side.</p>
+                            <div class="flex items-center gap-6 mb-10">
+                                <i class="devicon-python-plain colored text-3xl"></i>
+                                <i class="devicon-tensorflow-original colored text-3xl"></i>
+                                <i class="devicon-react-original colored text-3xl"></i>
+                            </div>
+                            <a href="#" class="px-8 py-3 border-2 border-blue-500 text-blue-500 rounded-full font-bold hover:bg-blue-500 hover:text-white transition-all w-fit">
+                                View Project →
+                            </a>
+                        </div>
+                        <div class="md:w-2/5 h-64 md:h-full bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center p-12">
+                            <div class="w-full h-full rounded-2xl bg-white shadow-2xl mockup-visual relative overflow-hidden flex items-center justify-center">
+                                <div class="w-3/4 h-3/4 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-600 blur-2xl opacity-50"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <i class="fa-solid fa-wand-sparkles text-6xl text-blue-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card sticky top-28 w-full h-[90vh] px-6 pb-20 flex items-center justify-center">
+                    <div class="w-full h-full bg-[#F5FDF8] rounded-[40px] shadow-2xl border border-border overflow-hidden flex flex-col md:flex-row relative">
+                        <span class="absolute top-10 left-10 text-[180px] font-black text-ink opacity-[0.04] pointer-events-none leading-none">03</span>
+                        <div class="md:w-3/5 p-12 md:p-20 flex flex-col justify-center relative z-10">
+                            <div class="flex gap-2 mb-6">
+                                <span class="px-4 py-1.5 rounded-full bg-green-500 text-white text-xs font-bold uppercase">Next.js</span>
+                                <span class="px-4 py-1.5 rounded-full bg-green-500 text-white text-xs font-bold uppercase">E-com</span>
+                            </div>
+                            <h3 class="text-5xl md:text-6xl font-serif font-bold mb-6">SHOPWAVE</h3>
+                            <p class="text-muted text-lg mb-10 leading-relaxed max-w-md">End-to-end shopping experience with real-time inventory and payment processing.</p>
+                            <div class="flex items-center gap-6 mb-10">
+                                <i class="devicon-nextjs-original colored text-3xl"></i>
+                                <i class="devicon-postgresql-plain colored text-3xl"></i>
+                                <i class="fa-brands fa-stripe text-3xl text-indigo-600"></i>
+                            </div>
+                            <a href="#" class="px-8 py-3 border-2 border-green-500 text-green-500 rounded-full font-bold hover:bg-green-500 hover:text-white transition-all w-fit">
+                                View Project →
+                            </a>
+                        </div>
+                        <div class="md:w-2/5 h-64 md:h-full bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center p-12">
+                            <div class="w-full h-full rounded-2xl bg-white shadow-2xl mockup-visual relative overflow-hidden p-6">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="aspect-square bg-green-100 rounded-lg"></div>
+                                    <div class="aspect-square bg-green-100 rounded-lg"></div>
+                                    <div class="aspect-square bg-green-100 rounded-lg"></div>
+                                    <div class="aspect-square bg-green-100 rounded-lg"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card sticky top-32 w-full h-[90vh] px-6 pb-20 flex items-center justify-center">
+                    <div class="w-full h-full bg-[#FDF5F8] rounded-[40px] shadow-2xl border border-border overflow-hidden flex flex-col md:flex-row relative">
+                        <span class="absolute top-10 left-10 text-[180px] font-black text-ink opacity-[0.04] pointer-events-none leading-none">04</span>
+                        <div class="md:w-3/5 p-12 md:p-20 flex flex-col justify-center relative z-10">
+                            <div class="flex gap-2 mb-6">
+                                <span class="px-4 py-1.5 rounded-full bg-pink-500 text-white text-xs font-bold uppercase">React</span>
+                                <span class="px-4 py-1.5 rounded-full bg-pink-500 text-white text-xs font-bold uppercase">SaaS</span>
+                            </div>
+                            <h3 class="text-5xl md:text-6xl font-serif font-bold mb-6">PORTCRAFT</h3>
+                            <p class="text-muted text-lg mb-10 leading-relaxed max-w-md">Drag-and-drop portfolio generator with live preview and one-click deployment.</p>
+                            <div class="flex items-center gap-6 mb-10">
+                                <i class="devicon-react-original colored text-3xl"></i>
+                                <i class="devicon-firebase-plain colored text-3xl"></i>
+                                <i class="devicon-tailwindcss-plain colored text-3xl"></i>
+                            </div>
+                            <a href="#" class="px-8 py-3 border-2 border-pink-500 text-pink-500 rounded-full font-bold hover:bg-pink-500 hover:text-white transition-all w-fit">
+                                View Project →
+                            </a>
+                        </div>
+                        <div class="md:w-2/5 h-64 md:h-full bg-gradient-to-br from-pink-100 to-pink-50 flex items-center justify-center p-12">
+                            <div class="w-full h-full rounded-2xl bg-white shadow-2xl mockup-visual relative overflow-hidden flex flex-col p-4 gap-3">
+                                <div class="w-full h-8 bg-pink-50 rounded-lg border-2 border-dashed border-pink-200"></div>
+                                <div class="w-full flex-1 bg-pink-50 rounded-lg border-2 border-dashed border-pink-200 flex items-center justify-center">
+                                    <i class="fa-solid fa-plus text-pink-300 text-3xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIVIDER -->
+        <div class="divider container mx-auto px-6 py-10">
+            <div class="h-[1px] bg-border w-0 divider-line"></div>
+        </div>
+
+        <!-- SECTION 4: CV / EDUCATION -->
+        <section id="cv" class="py-32 relative overflow-hidden">
+            <span class="absolute top-20 right-20 text-[200px] font-black text-ink opacity-[0.04] pointer-events-none leading-none hidden lg:block">04</span>
+            <div class="container mx-auto px-6 mb-20 text-center">
+                <span class="text-accent font-bold uppercase tracking-widest text-sm">Background</span>
+                <h2 class="text-6xl font-black mt-4">My <span class="font-serif font-bold">Journey</span></h2>
+                <p class="text-muted mt-4">Academic background & certifications</p>
+            </div>
+
+            <div class="container mx-auto px-6 relative">
+                <!-- Timeline SVG Line -->
+                <div class="absolute left-1/2 top-0 bottom-0 w-[2px] bg-border -translate-x-1/2 hidden md:block">
+                    <svg width="2" height="100%" class="w-full h-full">
+                        <line id="timeline-line" x1="1" y1="0" x2="1" y2="100%" stroke="url(#line-gradient)" stroke-width="2" stroke-dasharray="0" />
+                        <defs>
+                            <linearGradient id="line-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#FAF8F5" />
+                                <stop offset="50%" stop-color="#E8572A" />
+                                <stop offset="100%" stop-color="#E8572A" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+
+                <div class="space-y-20 relative">
+                    <!-- Education 1 -->
+                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0" data-aos="fade-right">
+                        <div class="md:w-1/2 md:pr-20 text-right order-2 md:order-1">
+                            <div class="bg-white p-8 rounded-3xl shadow-lg border-l-4 border-accent inline-block text-left w-full max-w-lg">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-accentLight text-accent flex items-center justify-center text-xl">
+                                        <i class="fa-solid fa-school"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold">10th Grade (SSLC)</h4>
+                                        <span class="text-sm text-muted">2020</span>
+                                    </div>
+                                </div>
+                                <p class="text-ink font-medium mb-2">Government Higher Secondary School</p>
+                                <span class="px-4 py-1 rounded-full bg-accentLight text-accent text-xs font-bold uppercase">Score: 92%</span>
+                            </div>
+                        </div>
+                        <div class="w-6 h-6 rounded-full bg-accent border-4 border-cream z-10 order-1 md:order-2"></div>
+                        <div class="md:w-1/2 md:pl-20 order-3"></div>
+                    </div>
+
+                    <!-- Certification 1 -->
+                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0" data-aos="fade-left">
+                        <div class="md:w-1/2 md:pr-20 text-right order-2 md:order-3"></div>
+                        <div class="w-6 h-6 rounded-full bg-accent border-4 border-cream z-10 order-1 md:order-2"></div>
+                        <div class="md:w-1/2 md:pl-20 order-3 md:order-1">
+                            <div class="bg-white p-8 rounded-3xl shadow-lg border-l-4 border-accent inline-block text-left w-full max-w-lg">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-accentLight text-yellow-500 flex items-center justify-center text-xl">
+                                        <i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold">AWS Cloud Practitioner</h4>
+                                        <span class="text-sm text-muted">Amazon Web Services | 2024</span>
+                                    </div>
+                                </div>
+                                <div class="w-20 h-14 bg-gray-100 rounded-lg flex items-center justify-center text-muted border border-dashed border-border mb-4">
+                                    <i class="fa-solid fa-camera"></i>
+                                </div>
+                                <p class="text-sm text-muted">Foundational knowledge of AWS cloud platform and services.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Education 2 -->
+                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0" data-aos="fade-right">
+                        <div class="md:w-1/2 md:pr-20 text-right order-2 md:order-1">
+                            <div class="bg-white p-8 rounded-3xl shadow-lg border-l-4 border-accent inline-block text-left w-full max-w-lg">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-accentLight text-accent flex items-center justify-center text-xl">
+                                        <i class="fa-solid fa-graduation-cap"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold">12th Grade (HSC)</h4>
+                                        <span class="text-sm text-muted">2022</span>
+                                    </div>
+                                </div>
+                                <p class="text-ink font-medium mb-2">S.R.V Excel Matric Higher Secondary School</p>
+                                <span class="px-4 py-1 rounded-full bg-accentLight text-accent text-xs font-bold uppercase">Score: 95%</span>
+                            </div>
+                        </div>
+                        <div class="w-6 h-6 rounded-full bg-accent border-4 border-cream z-10 order-1 md:order-2"></div>
+                        <div class="md:w-1/2 md:pl-20 order-3"></div>
+                    </div>
+
+                    <!-- Certification 2 -->
+                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0" data-aos="fade-left">
+                        <div class="md:w-1/2 md:pr-20 text-right order-2 md:order-3"></div>
+                        <div class="w-6 h-6 rounded-full bg-accent border-4 border-cream z-10 order-1 md:order-2"></div>
+                        <div class="md:w-1/2 md:pl-20 order-3 md:order-1">
+                            <div class="bg-white p-8 rounded-3xl shadow-lg border-l-4 border-accent inline-block text-left w-full max-w-lg">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-accentLight text-blue-500 flex items-center justify-center text-xl">
+                                        <i class="fa-solid fa-star"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold">Meta Frontend Developer</h4>
+                                        <span class="text-sm text-muted">Coursera × Meta | 2024</span>
+                                    </div>
+                                </div>
+                                <div class="w-20 h-14 bg-gray-100 rounded-lg flex items-center justify-center text-muted border border-dashed border-border mb-4">
+                                    <i class="fa-solid fa-camera"></i>
+                                </div>
+                                <p class="text-sm text-muted">Advanced frontend development skills including React and UI principles.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Education 3 -->
+                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0" data-aos="fade-right">
+                        <div class="md:w-1/2 md:pr-20 text-right order-2 md:order-1">
+                            <div class="bg-white p-8 rounded-3xl shadow-lg border-l-4 border-accent inline-block text-left w-full max-w-lg">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="w-12 h-12 rounded-full bg-accentLight text-accent flex items-center justify-center text-xl">
+                                        <i class="fa-solid fa-building-columns"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xl font-bold">B.Tech - CSE</h4>
+                                        <span class="text-sm text-muted">2022–2026</span>
+                                    </div>
+                                </div>
+                                <p class="text-ink font-medium mb-2">Anna University, Chennai</p>
+                                <span class="px-4 py-1 rounded-full bg-accentLight text-accent text-xs font-bold uppercase">CGPA: 8.9 (Current)</span>
+                            </div>
+                        </div>
+                        <div class="w-6 h-6 rounded-full bg-accent border-4 border-cream z-10 order-1 md:order-2"></div>
+                        <div class="md:w-1/2 md:pl-20 order-3"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIVIDER -->
+        <div class="divider container mx-auto px-6 py-10">
+            <div class="h-[1px] bg-border w-0 divider-line"></div>
+        </div>
+
+        <!-- SECTION 5: LANGUAGES -->
+        <section id="languages" class="py-32 bg-accentLight/30 relative">
+            <span class="absolute top-20 right-20 text-[200px] font-black text-ink opacity-[0.04] pointer-events-none leading-none hidden lg:block">05</span>
+            <div class="container mx-auto px-6 mb-20 text-center">
+                <span class="text-accent font-bold uppercase tracking-widest text-sm">Communication</span>
+                <h2 class="text-6xl font-black mt-4">I Speak In <span class="font-serif font-bold">Code & Culture</span></h2>
+            </div>
+
+            <!-- Programming Languages -->
+            <div class="container mx-auto px-6 mb-32">
+                <h3 class="text-2xl font-bold mb-12 text-muted text-center uppercase tracking-widest">Languages I Code In</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                    <!-- Web Development -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border border-border flex flex-col items-center hover:shadow-xl hover:-translate-y-2 transition-all group" data-aos="zoom-in" data-aos-delay="0">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden mb-4 border border-border">
+                            <img src="img stack/web dev.webp" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold mb-4">Web Development</span>
+                        <div class="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent progress-bar" data-width="95%"></div>
+                        </div>
+                    </div>
+                    <!-- Python -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border border-border flex flex-col items-center hover:shadow-xl hover:-translate-y-2 transition-all group" data-aos="zoom-in" data-aos-delay="100">
+                        <i class="devicon-python-plain colored text-5xl mb-4"></i>
+                        <span class="font-bold mb-4">Python</span>
+                        <div class="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent progress-bar" data-width="88%"></div>
+                        </div>
+                    </div>
+                    <!-- Java/DSA -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border border-border flex flex-col items-center hover:shadow-xl hover:-translate-y-2 transition-all group" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden mb-4 border border-border">
+                            <img src="img stack/java.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold mb-4">Java/DSA</span>
+                        <div class="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent progress-bar" data-width="82%"></div>
+                        </div>
+                    </div>
+                    <!-- Machine Learning -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border border-border flex flex-col items-center hover:shadow-xl hover:-translate-y-2 transition-all group" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden mb-4 border border-border">
+                            <img src="img stack/machine learing.webp" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold mb-4">Machine Learning</span>
+                        <div class="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent progress-bar" data-width="78%"></div>
+                        </div>
+                    </div>
+                    <!-- Deep Learning -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border border-border flex flex-col items-center hover:shadow-xl hover:-translate-y-2 transition-all group" data-aos="zoom-in" data-aos-delay="400">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden mb-4 border border-border">
+                            <img src="img stack/deep-learning.avif" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold mb-4">Deep Learning</span>
+                        <div class="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent progress-bar" data-width="75%"></div>
+                        </div>
+                    </div>
+                    <!-- MS-Office -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border border-border flex flex-col items-center hover:shadow-xl hover:-translate-y-2 transition-all group" data-aos="zoom-in" data-aos-delay="500">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden mb-4 border border-border">
+                            <img src="img stack/ms office logo_files/Office_logos.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold mb-4">MS-Office</span>
+                        <div class="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent progress-bar" data-width="90%"></div>
+                        </div>
+                    </div>
+                    <!-- Power BI -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border border-border flex flex-col items-center hover:shadow-xl hover:-translate-y-2 transition-all group" data-aos="zoom-in" data-aos-delay="600">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden mb-4 border border-border">
+                            <img src="img stack/power bi.webp" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold mb-4">Power BI</span>
+                        <div class="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent progress-bar" data-width="85%"></div>
+                        </div>
+                    </div>
+                    <!-- Stock Marketing -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border border-border flex flex-col items-center hover:shadow-xl hover:-translate-y-2 transition-all group" data-aos="zoom-in" data-aos-delay="700">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden mb-4 border border-border">
+                            <img src="img stack/stock.webp" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold mb-4">Stock Marketing</span>
+                        <div class="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent progress-bar" data-width="72%"></div>
+                        </div>
+                    </div>
+                    <!-- HTML & CSS -->
+                    <div class="bg-white p-6 rounded-3xl shadow-md border border-border flex flex-col items-center hover:shadow-xl hover:-translate-y-2 transition-all group" data-aos="zoom-in" data-aos-delay="800">
+                        <div class="w-16 h-16 rounded-xl overflow-hidden mb-4 border border-border">
+                            <img src="img stack/html and css.png" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold mb-4">HTML & CSS</span>
+                        <div class="w-full h-1.5 bg-border rounded-full overflow-hidden">
+                            <div class="h-full bg-accent progress-bar" data-width="95%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Human Languages -->
+            <div class="container mx-auto px-6 max-w-4xl">
+                <h3 class="text-2xl font-bold mb-12 text-muted text-center uppercase tracking-widest">Languages I Speak</h3>
+                <div class="space-y-6">
+                    <!-- Language Card 1 -->
+                    <div class="bg-white p-6 rounded-[2rem] shadow-md flex items-center justify-between group" data-aos="fade-up">
+                        <div class="flex items-center gap-4">
+                            <span class="text-4xl">🇮🇳</span>
+                            <span class="text-2xl font-bold">Tamil</span>
+                        </div>
+                        <div class="flex-1 mx-12 hidden md:block">
+                            <div class="w-full h-2 bg-border rounded-full overflow-hidden">
+                                <div class="h-full bg-accent progress-bar" data-width="100%"></div>
+                            </div>
+                        </div>
+                        <span class="px-6 py-2 rounded-full bg-accentLight text-accent font-bold">Native</span>
+                    </div>
+                    <!-- Language Card 2 -->
+                    <div class="bg-white p-6 rounded-[2rem] shadow-md flex items-center justify-between group" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center gap-4">
+                            <span class="text-4xl">🇬🇧</span>
+                            <span class="text-2xl font-bold">English</span>
+                        </div>
+                        <div class="flex-1 mx-12 hidden md:block">
+                            <div class="w-full h-2 bg-border rounded-full overflow-hidden">
+                                <div class="h-full bg-accent progress-bar" data-width="90%"></div>
+                            </div>
+                        </div>
+                        <span class="px-6 py-2 rounded-full bg-accentLight text-accent font-bold">Fluent</span>
+                    </div>
+                    <!-- Language Card 3 -->
+                    <div class="bg-white p-6 rounded-[2rem] shadow-md flex items-center justify-between group" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center gap-4">
+                            <span class="text-4xl">🇮🇳</span>
+                            <span class="text-2xl font-bold">Hindi</span>
+                        </div>
+                        <div class="flex-1 mx-12 hidden md:block">
+                            <div class="w-full h-2 bg-border rounded-full overflow-hidden">
+                                <div class="h-full bg-accent progress-bar" data-width="60%"></div>
+                            </div>
+                        </div>
+                        <span class="px-6 py-2 rounded-full bg-accentLight text-accent font-bold">Conversational</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DIVIDER -->
+        <div class="divider container mx-auto px-6 py-10">
+            <div class="h-[1px] bg-border w-0 divider-line"></div>
+        </div>
+
+        <!-- SECTION 6: CONTACT -->
+        <section id="contact" class="py-32 bg-ink text-white relative">
+            <span class="absolute top-20 right-20 text-[200px] font-black text-white opacity-[0.04] pointer-events-none leading-none hidden lg:block">06</span>
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-6xl md:text-8xl font-black leading-tight mb-12">
+                    <span class="block" data-aos="fade-up">LET'S CREATE</span>
+                    <span class="block text-accent outline-text-light font-serif font-bold" data-aos="fade-up" data-aos-delay="100">SOMETHING</span>
+                    <span class="block font-serif font-bold" data-aos="fade-up" data-aos-delay="200">AMAZING.</span>
+                </h2>
+                
+                <p class="text-muted text-xl mb-12 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="300">
+                    Open to freelance, collaborations & full-time roles.
+                </p>
+
+                <div class="mb-20" data-aos="fade-up" data-aos-delay="400">
+                    <a href="mailto:chideshv@gmail.com" class="text-3xl md:text-4xl font-bold hover:text-accent transition-all inline-block relative email-link">
+                        → chideshv@gmail.com
+                    </a>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="max-w-xl mx-auto bg-white text-ink p-10 md:p-12 rounded-[2.5rem] shadow-2xl" data-aos="zoom-in" data-aos-delay="500">
+                    <form id="contact-form" class="space-y-8 text-left">
+                        <div class="relative">
+                            <input type="text" id="name" placeholder=" " class="peer w-full border-b-2 border-border py-2 focus:border-accent focus:outline-none bg-transparent transition-all">
+                            <label for="name" class="absolute left-0 top-2 text-muted transition-all pointer-events-none peer-focus:-top-4 peer-focus:text-xs peer-focus:text-accent peer-[:not(:placeholder-shown)]:-top-4 peer-[:not(:placeholder-shown)]:text-xs">Full Name</label>
+                        </div>
+                        <div class="relative">
+                            <input type="email" id="email" placeholder=" " class="peer w-full border-b-2 border-border py-2 focus:border-accent focus:outline-none bg-transparent transition-all">
+                            <label for="email" class="absolute left-0 top-2 text-muted transition-all pointer-events-none peer-focus:-top-4 peer-focus:text-xs peer-focus:text-accent peer-[:not(:placeholder-shown)]:-top-4 peer-[:not(:placeholder-shown)]:text-xs">Email Address</label>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="subject" placeholder=" " class="peer w-full border-b-2 border-border py-2 focus:border-accent focus:outline-none bg-transparent transition-all">
+                            <label for="subject" class="absolute left-0 top-2 text-muted transition-all pointer-events-none peer-focus:-top-4 peer-focus:text-xs peer-focus:text-accent peer-[:not(:placeholder-shown)]:-top-4 peer-[:not(:placeholder-shown)]:text-xs">Subject</label>
+                        </div>
+                        <div class="relative">
+                            <textarea id="message" rows="4" placeholder=" " class="peer w-full border-b-2 border-border py-2 focus:border-accent focus:outline-none bg-transparent transition-all resize-none"></textarea>
+                            <label for="message" class="absolute left-0 top-2 text-muted transition-all pointer-events-none peer-focus:-top-4 peer-focus:text-xs peer-focus:text-accent peer-[:not(:placeholder-shown)]:-top-4 peer-[:not(:placeholder-shown)]:text-xs">Your Message</label>
+                        </div>
+                        <button type="submit" id="submit-btn" class="w-full py-5 bg-accent text-white rounded-full font-bold text-lg shadow-xl shadow-accent/20 hover:scale-[1.02] active:scale-95 transition-all">
+                            Send Message →
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Social Links -->
+                <div class="flex justify-center gap-6 mt-24">
+                    <a href="#" class="social-icon w-14 h-14 bg-white rounded-full flex items-center justify-center text-ink text-xl hover:bg-accent hover:text-white transition-all hover:-translate-y-2">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="#" class="social-icon w-14 h-14 bg-white rounded-full flex items-center justify-center text-ink text-xl hover:bg-accent hover:text-white transition-all hover:-translate-y-2">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-icon w-14 h-14 bg-white rounded-full flex items-center justify-center text-ink text-xl hover:bg-accent hover:text-white transition-all hover:-translate-y-2">
+                        <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon w-14 h-14 bg-white rounded-full flex items-center justify-center text-ink text-xl hover:bg-accent hover:text-white transition-all hover:-translate-y-2">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon w-14 h-14 bg-white rounded-full flex items-center justify-center text-ink text-xl hover:bg-accent hover:text-white transition-all hover:-translate-y-2">
+                        <i class="fa-brands fa-dribbble"></i>
+                    </a>
+                    <a href="#" class="social-icon w-14 h-14 bg-white rounded-full flex items-center justify-center text-ink text-xl hover:bg-accent hover:text-white transition-all hover:-translate-y-2">
+                        <i class="fa-brands fa-behance"></i>
+                    </a>
+                </div>
+
+                <div class="mt-32 pt-8 border-t border-white/10 text-muted text-sm flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p>Designed & Built with ❤️ by CHIDESH V © 2026</p>
+                    <div class="flex gap-8">
+                        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- BACK TO TOP -->
+    <button id="back-to-top" class="fixed bottom-10 right-10 w-14 h-14 bg-accent text-white rounded-full flex items-center justify-center shadow-2xl translate-y-24 opacity-0 transition-all duration-500 z-50">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- SCRIPTS -->
+    <script src="js/cursor.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
