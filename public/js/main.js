@@ -1,12 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- 0. INITIALIZE LENIS (Smooth Scroll) ---
-    const lenis = new Lenis()
+    window.lenis = new Lenis({
+        duration: 1,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+    })
+
+    // Integrate Lenis with ScrollTrigger
     function raf(time) {
-        lenis.raf(time)
+        window.lenis.raf(time)
         requestAnimationFrame(raf)
     }
     requestAnimationFrame(raf)
+
+    window.lenis.on('scroll', ScrollTrigger.update)
+
+    // Stop Lenis during loading
+    window.lenis.stop();
 
     // --- 1. INITIALIZE AOS ---
     AOS.init({
@@ -48,20 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrollProgress = document.getElementById('scroll-progress');
     const backToTop = document.getElementById('back-to-top');
 
-    window.addEventListener('scroll', () => {
+    window.lenis.on('scroll', (e) => {
         const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = (window.scrollY / totalHeight) * 100;
+        const progress = (e.animatedScroll / totalHeight) * 100;
         scrollProgress.style.width = `${progress}%`;
 
         // Nav shadow on scroll
-        if (window.scrollY > 50) {
-            nav.classList.add('shadow-lg');
+        if (e.animatedScroll > 50) {
+            nav.classList.add('shadow-lg', 'bg-cream/95');
+            nav.classList.remove('bg-cream/80');
         } else {
-            nav.classList.remove('shadow-lg');
+            nav.classList.remove('shadow-lg', 'bg-cream/95');
+            nav.classList.add('bg-cream/80');
         }
 
         // Back to top button
-        if (window.scrollY > 500) {
+        if (e.animatedScroll > 500) {
             backToTop.classList.remove('translate-y-24', 'opacity-0');
         } else {
             backToTop.classList.add('translate-y-24', 'opacity-0');
@@ -69,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     backToTop.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.lenis.scrollTo(0);
     });
 
     // --- 4. CONTACT FORM HANDLING ---
@@ -103,13 +116,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                window.scrollTo({
-                    top: target.offsetTop - 80, // Offset for fixed nav
-                    behavior: 'smooth'
-                });
-            }
+            const target = this.getAttribute('href');
+            window.lenis.scrollTo(target, {
+                offset: -80,
+                duration: 1.5,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+            });
         });
     });
+
 });

@@ -13,11 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
         mouseX = e.clientX;
         mouseY = e.clientY;
         
-        // Dot follows immediately
-        dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+        // Show cursor on first movement
+        dot.classList.remove('hidden');
+        ring.classList.remove('hidden');
     });
 
     function animate() {
+        // Dot follows immediately but in sync with refresh rate
+        dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+
         // Ring follows with delay (lerp)
         ringX = lerp(ringX, mouseX, 0.15);
         ringY = lerp(ringY, mouseY, 0.15);

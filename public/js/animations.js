@@ -1,6 +1,10 @@
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
+// Optimize ScrollTrigger performance
+ScrollTrigger.config({ limitCallbacks: true });
+ScrollTrigger.normalizeScroll(true);
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- 1. PAGE LOAD CURTAIN ---
@@ -14,7 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
     .to("#loader", {
         yPercent: -100,
         duration: 0.8,
-        ease: "power4.inOut"
+        ease: "power4.inOut",
+        onStart: () => {
+            if (window.lenis) {
+                window.lenis.start();
+                ScrollTrigger.refresh();
+            }
+        },
+        onComplete: () => {
+            document.getElementById('loader').style.display = 'none';
+        }
     })
     .from(".hero-line", {
         y: 100,
@@ -65,79 +78,62 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "Machine Learning", category: "AI/ML", desc: "Building predictive models and data-driven insights.", percent: 78, icon: "fa-solid fa-brain text-accent", img: "img stack/machine learing.webp" },
         { name: "Deep Learning", category: "AI/ML", desc: "Neural networks and complex pattern recognition.", percent: 75, icon: "fa-solid fa-microchip text-accent", img: "img stack/deep-learning.avif" },
         { name: "MS-Office", category: "Tool", desc: "Data organization, presentation, and documentation.", percent: 90, icon: "fa-solid fa-file-excel text-accent", img: "img stack/ms office logo_files/Office_logos.jpg" },
-        { name: "Power BI", category: "Data Viz", desc: "Creating interactive dashboards and business intelligence reports.", percent: 85, icon: "fa-solid fa-chart-pie text-accent", img: "img stack/power bi.webp" },
+        { name: "Power BI", category: "Data Viz", desc: "Creating interactive dashboards and business intelligence reports.", percent: 85, icon: "fa-solid fa-chart-pie text-accent", img: "img stack/power-bi-new.png" },
         { name: "Stock Marketing", category: "Finance", desc: "Technical analysis and market trend prediction.", percent: 72, icon: "fa-solid fa-chart-line text-accent", img: "img stack/stock.webp" },
         { name: "HTML & CSS", category: "Frontend", desc: "Pixel-perfect layouts and responsive design.", percent: 95, icon: "devicon-css3-plain colored", img: "img stack/html and css.png" }
     ];
 
-    gsap.timeline({
+    // --- 3. SKILLS GRID INJECTION ---
+    const skillsGrid = document.getElementById('skills-grid');
+    if (skillsGrid) {
+        skills.forEach((skill, index) => {
+            const card = document.createElement('div');
+            card.className = "skill-card bg-white p-6 rounded-2xl border border-border/50 shadow-sm flex flex-col items-center text-center group transition-all duration-300 hover:shadow-lg";
+            
+            const visualHtml = skill.img 
+                ? `<div class="w-14 h-14 rounded-xl overflow-hidden mb-4 flex items-center justify-center">
+                     <img src="${skill.img}" class="w-full h-full object-contain">
+                   </div>`
+                : `<div class="w-14 h-14 rounded-xl bg-accentLight/30 flex items-center justify-center mb-4">
+                     <i class="${skill.icon} text-3xl text-accent"></i>
+                   </div>`;
+
+            card.innerHTML = `
+                ${visualHtml}
+                <span class="text-accent font-bold uppercase tracking-[0.2em] text-[8px] mb-2 bg-accentLight px-2 py-0.5 rounded-full">${skill.category}</span>
+                <h3 class="text-xl font-bold tracking-tight text-center">${skill.name}</h3>
+            `;
+            
+            skillsGrid.appendChild(card);
+            
+            // Progress bar animation
+            gsap.to(card.querySelector('.skill-bar-fill'), {
+                width: skill.percent + "%",
+                duration: 1.5,
+                ease: "expo.out",
+                scrollTrigger: {
+                    trigger: "#container-scroll-scene",
+                    start: "top center",
+                }
+            });
+        });
+    }
+
+    // --- 3b. CONTAINER SCROLL ANIMATION (Aceternity Style) ---
+    const scrollTl = gsap.timeline({
         scrollTrigger: {
-            trigger: "#skills-pin-container",
-            start: "top top",
-            end: "+=3000",
-            pin: true,
+            trigger: "#skills",
+            start: "top bottom",
+            end: "top center", // Faster reveal
             scrub: 1,
-            onUpdate: (self) => {
-                const progress = self.progress;
-                const index = Math.min(Math.floor(progress * skills.length), skills.length - 1);
-                updateSkillContent(index);
-            }
         }
     });
 
-    function updateSkillContent(index) {
-        const skill = skills[index];
-        const nameEl = document.querySelector('.skill-name');
-        const catEl = document.querySelector('.skill-category');
-        const descEl = document.querySelector('.skill-desc');
-        const iconEl = document.getElementById('skill-icon');
-        const percentEl = document.getElementById('skill-percent');
-        const circle = document.getElementById('skill-progress-circle');
-
-        if (nameEl.innerText !== skill.name) {
-            gsap.to(".skill-content", { x: -20, opacity: 0, duration: 0.3, onComplete: () => {
-                nameEl.innerText = skill.name;
-                catEl.innerText = skill.category;
-                descEl.innerText = skill.desc;
-                gsap.to(".skill-content", { x: 0, opacity: 1, duration: 0.3 });
-            }});
-
-            gsap.to("#skill-icon", { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => {
-                const visualCol = document.querySelector('.skill-visual-column .relative');
-                let skillImg = visualCol.querySelector('img');
-                
-                if (skill.img) {
-                    iconEl.classList.add('hidden');
-                    if (!skillImg) {
-                        skillImg = document.createElement('img');
-                        skillImg.className = "w-full h-full object-cover rounded-[40px] absolute inset-0";
-                        visualCol.appendChild(skillImg);
-                    }
-                    skillImg.src = skill.img;
-                    skillImg.style.display = "block";
-                } else {
-                    iconEl.classList.remove('hidden');
-                    iconEl.className = `${skill.icon} text-[140px] drop-shadow-2xl`;
-                    if (skillImg) skillImg.style.display = "none";
-                }
-                gsap.to("#skill-icon, .skill-visual-column img", { scale: 1, opacity: 1, duration: 0.3 });
-            }});
-
-            // Progress Circle
-            const offset = 364.4 - (364.4 * skill.percent) / 100;
-            gsap.to(circle, { strokeDashoffset: offset, duration: 1 });
-            
-            // Percentage Counter
-            let count = { val: parseInt(percentEl.innerText) || 0 };
-            gsap.to(count, {
-                val: skill.percent,
-                duration: 1,
-                onUpdate: () => {
-                    percentEl.innerText = Math.floor(count.val) + "%";
-                }
-            });
-        }
-    }
+    // Card 3D Reveal Only
+    scrollTl.fromTo("#scroll-card", 
+        { rotateX: 20, scale: 1.05, y: 50 },
+        { rotateX: 0, scale: 1, y: 0, duration: 1, ease: "power2.out" }
+    );
 
     // --- 4. PROJECTS STACKING ---
     // (Handled by sticky CSS, but we add some entrance animations)
@@ -153,22 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 5. TIMELINE DRAWING ---
-    const timelinePath = document.getElementById('timeline-line');
-    if (timelinePath) {
-        const pathLength = timelinePath.getTotalLength();
-        gsap.set(timelinePath, { strokeDasharray: pathLength, strokeDashoffset: pathLength });
-
-        gsap.to(timelinePath, {
-            strokeDashoffset: 0,
-            scrollTrigger: {
-                trigger: "#cv",
-                start: "top 60%",
-                end: "bottom 80%",
-                scrub: 0.5
-            }
-        });
-    }
 
     // --- 6. PROGRESS BARS ---
     gsap.utils.toArray(".progress-bar").forEach(bar => {
