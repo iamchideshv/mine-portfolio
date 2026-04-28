@@ -1135,11 +1135,24 @@ h3 {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-@keyframes ping {
+    }
+}
 
-    75%,
-    100% {
-        transform: scale(3);
-        opacity: 0;
+/* MOBILE RESPONSIVE TWEAKS */
+@media (max-width: 768px) {
+    .lang-floating-words {
+        display: none;
+    }
+    
+    .contact-form-card {
+        padding: 1.5rem;
+    }
+    
+    .journey-title {
+        font-size: 3rem !important;
+    }
+    
+    .project-card h3 {
+        font-size: 2.5rem !important;
     }
 }
