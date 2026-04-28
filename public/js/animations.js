@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (skillsGrid) {
         skills.forEach((skill, index) => {
             const card = document.createElement('div');
-            card.className = "skill-card bg-white p-6 rounded-2xl border border-border/50 shadow-sm flex flex-col items-center text-center group transition-all duration-300 hover:shadow-lg";
+            card.className = "skill-card bg-white p-6 rounded-2xl border border-border/50 shadow-sm flex flex-col items-center text-center group transition-all duration-300 hover:shadow-lg min-w-[75vw] sm:min-w-0 shrink-0 snap-center";
             
             const visualHtml = skill.img 
                 ? `<div class="w-14 h-14 rounded-xl overflow-hidden mb-4 flex items-center justify-center">
