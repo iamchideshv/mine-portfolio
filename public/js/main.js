@@ -85,31 +85,59 @@ document.addEventListener('DOMContentLoaded', () => {
         window.lenis.scrollTo(0);
     });
 
-    // --- 4. CONTACT FORM HANDLING ---
+    // --- 4. CONTACT FORM HANDLING (Web3Forms) ---
     const contactForm = document.getElementById('contact-form');
-    const submitBtn = document.getElementById('submit-btn');
 
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        // Disable button and show loading state
-        const originalText = submitBtn.innerHTML;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Sending...';
 
-        // Simulate API call
-        setTimeout(() => {
-            submitBtn.classList.add('btn-success');
-            submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Message Sent!';
-            
-            // Reset form after delay
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
+
+        const formData = new FormData(contactForm);
+        const object = Object.fromEntries(formData);
+        const json = JSON.stringify(object);
+
+        try {
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: json
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Success state
+                submitBtn.classList.add('btn-success');
+                submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Message Sent!';
+
+                // Reset after 3 seconds
+                setTimeout(() => {
+                    contactForm.reset();
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.classList.remove('btn-success');
+                }, 3000);
+            } else {
+                throw new Error(result.message || 'Submission failed');
+            }
+        } catch (error) {
+            submitBtn.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Failed. Try again.';
+            submitBtn.style.background = '#ef4444';
             setTimeout(() => {
-                contactForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
-                submitBtn.classList.remove('btn-success');
+                submitBtn.style.background = '';
             }, 3000);
-        }, 1500);
+        }
     });
 
     // --- 5. SMOOTH SCROLLING FOR ALL ANCHORS ---

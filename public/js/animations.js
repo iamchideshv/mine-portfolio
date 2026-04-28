@@ -6,54 +6,54 @@ ScrollTrigger.config({ limitCallbacks: true });
 ScrollTrigger.normalizeScroll(true);
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // --- 1. PAGE LOAD CURTAIN ---
     const tlLoader = gsap.timeline();
-    
+
     tlLoader.to("#loader-bar", {
         width: "100%",
         duration: 1.5,
         ease: "power2.inOut"
     })
-    .to("#loader", {
-        yPercent: -100,
-        duration: 0.8,
-        ease: "power4.inOut",
-        onStart: () => {
-            if (window.lenis) {
-                window.lenis.start();
-                ScrollTrigger.refresh();
+        .to("#loader", {
+            yPercent: -100,
+            duration: 0.8,
+            ease: "power4.inOut",
+            onStart: () => {
+                if (window.lenis) {
+                    window.lenis.start();
+                    ScrollTrigger.refresh();
+                }
+            },
+            onComplete: () => {
+                document.getElementById('loader').style.display = 'none';
             }
-        },
-        onComplete: () => {
-            document.getElementById('loader').style.display = 'none';
-        }
-    })
-    .from(".hero-line", {
-        y: 100,
-        opacity: 0,
-        stagger: 0.15,
-        duration: 1,
-        ease: "power4.out"
-    }, "-=0.4")
-    .from(".profile-image-container", {
-        x: 100,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power4.out"
-    }, "-=1")
-    .from(".skill-badge", {
-        scale: 0,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.8,
-        ease: "back.out(1.7)"
-    }, "-=0.8");
+        })
+        .from(".hero-line", {
+            y: 100,
+            opacity: 0,
+            stagger: 0.15,
+            duration: 1,
+            ease: "power4.out"
+        }, "-=0.4")
+        .from(".profile-image-container", {
+            x: 100,
+            opacity: 0,
+            duration: 1.2,
+            ease: "power4.out"
+        }, "-=1")
+        .from(".skill-badge", {
+            scale: 0,
+            opacity: 0,
+            stagger: 0.1,
+            duration: 0.8,
+            ease: "back.out(1.7)"
+        }, "-=0.8");
 
     // --- 2. HERO TYPEWRITER ---
     const words = ["interfaces", "experiences", "products", "websites"];
     let wordIndex = 0;
-    
+
     function updateTypewriter() {
         gsap.to("#typewriter", {
             duration: 1,
@@ -70,70 +70,27 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTypewriter();
 
 
-    // --- 3. SKILLS PINNED SCROLL ---
-    const skills = [
-        { name: "Web Development", category: "Frontend", desc: "Crafting modern, responsive web applications using the latest frameworks.", percent: 95, icon: "devicon-html5-plain colored", img: "img stack/web dev.webp" },
-        { name: "Python", category: "Language", desc: "Advanced scripting, automation, and data processing.", percent: 88, icon: "devicon-python-plain colored" },
-        { name: "Java/DSA", category: "Language", desc: "Problem-solving and efficient algorithm design.", percent: 82, icon: "devicon-java-plain colored", img: "img stack/java.jpg" },
-        { name: "Machine Learning", category: "AI/ML", desc: "Building predictive models and data-driven insights.", percent: 78, icon: "fa-solid fa-brain text-accent", img: "img stack/machine learing.webp" },
-        { name: "Deep Learning", category: "AI/ML", desc: "Neural networks and complex pattern recognition.", percent: 75, icon: "fa-solid fa-microchip text-accent", img: "img stack/deep-learning.avif" },
-        { name: "MS-Office", category: "Tool", desc: "Data organization, presentation, and documentation.", percent: 90, icon: "fa-solid fa-file-excel text-accent", img: "img stack/ms office logo_files/Office_logos.jpg" },
-        { name: "Power BI", category: "Data Viz", desc: "Creating interactive dashboards and business intelligence reports.", percent: 85, icon: "fa-solid fa-chart-pie text-accent", img: "img stack/power-bi-new.png" },
-        { name: "Stock Marketing", category: "Finance", desc: "Technical analysis and market trend prediction.", percent: 72, icon: "fa-solid fa-chart-line text-accent", img: "img stack/stock.webp" },
-        { name: "HTML & CSS", category: "Frontend", desc: "Pixel-perfect layouts and responsive design.", percent: 95, icon: "devicon-css3-plain colored", img: "img stack/html and css.png" }
-    ];
+    // --- 3. SKILLS BLUR REVEAL ON SCROLL ---
+    const skillItems = document.querySelectorAll('.skill-logo-item');
 
-    // --- 3. SKILLS GRID INJECTION ---
-    const skillsGrid = document.getElementById('skills-grid');
-    if (skillsGrid) {
-        skills.forEach((skill, index) => {
-            const card = document.createElement('div');
-            card.className = "skill-card bg-white p-6 rounded-2xl border border-border/50 shadow-sm flex flex-col items-center text-center group transition-all duration-300 hover:shadow-lg min-w-[75vw] sm:min-w-0 shrink-0 snap-center";
-            
-            const visualHtml = skill.img 
-                ? `<div class="w-14 h-14 rounded-xl overflow-hidden mb-4 flex items-center justify-center">
-                     <img src="${skill.img}" class="w-full h-full object-contain">
-                   </div>`
-                : `<div class="w-14 h-14 rounded-xl bg-accentLight/30 flex items-center justify-center mb-4">
-                     <i class="${skill.icon} text-3xl text-accent"></i>
-                   </div>`;
-
-            card.innerHTML = `
-                ${visualHtml}
-                <span class="text-accent font-bold uppercase tracking-[0.2em] text-[8px] mb-2 bg-accentLight px-2 py-0.5 rounded-full">${skill.category}</span>
-                <h3 class="text-xl font-bold tracking-tight text-center">${skill.name}</h3>
-            `;
-            
-            skillsGrid.appendChild(card);
-            
-            // Progress bar animation
-            gsap.to(card.querySelector('.skill-bar-fill'), {
-                width: skill.percent + "%",
-                duration: 1.5,
-                ease: "expo.out",
-                scrollTrigger: {
-                    trigger: "#container-scroll-scene",
-                    start: "top center",
-                }
-            });
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Stagger by index within its parent row
+                const siblings = Array.from(entry.target.parentElement.querySelectorAll('.skill-logo-item'));
+                const idx = siblings.indexOf(entry.target);
+                setTimeout(() => {
+                    entry.target.classList.add('revealed');
+                }, idx * 120);
+                revealObserver.unobserve(entry.target);
+            }
         });
-    }
-
-    // --- 3b. CONTAINER SCROLL ANIMATION (Aceternity Style) ---
-    const scrollTl = gsap.timeline({
-        scrollTrigger: {
-            trigger: "#skills",
-            start: "top bottom",
-            end: "top center", // Faster reveal
-            scrub: 1,
-        }
+    }, {
+        threshold: 0.2,
+        rootMargin: '0px 0px -60px 0px'
     });
 
-    // Card 3D Reveal Only
-    scrollTl.fromTo("#scroll-card", 
-        { rotateX: 20, scale: 1.05, y: 50 },
-        { rotateX: 0, scale: 1, y: 0, duration: 1, ease: "power2.out" }
-    );
+    skillItems.forEach(item => revealObserver.observe(item));
 
     // --- 4. PROJECTS STACKING ---
     // (Handled by sticky CSS, but we add some entrance animations)
@@ -184,6 +141,180 @@ document.addEventListener('DOMContentLoaded', () => {
                 trigger: heading,
                 start: "top 85%",
                 toggleActions: "play none none reverse"
+            }
+        });
+    });
+
+    // --- 9. JOURNEY SECTION — SCROLL ANIMATIONS ---
+
+    // 9a. Header stagger reveal
+    const journeyEyebrow = document.getElementById('journey-eyebrow');
+    const journeyTitle       = document.getElementById('journey-title');
+    const journeyTitleReveal = document.getElementById('journey-title-reveal-wrap');
+    const journeySubtitle    = document.getElementById('journey-subtitle');
+
+    if (journeyTitle) {
+        const tlJHeader = gsap.timeline({
+            scrollTrigger: {
+                trigger: '#cv',
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            }
+        });
+        tlJHeader
+            .from(journeyEyebrow, { y: 20, opacity: 0, duration: 0.6, ease: 'power3.out' })
+            .from(journeyTitleReveal, { 
+                y: 30, 
+                opacity: 0, 
+                filter: 'blur(10px)', 
+                duration: 1, 
+                ease: 'power4.out' 
+            }, '-=0.3')
+            .from(journeySubtitle, { y: 15, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.5');
+
+        // 9a-bis. Continuous parallax and shimmer while scrolling
+        gsap.to(journeyEyebrow, {
+            y: -30,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '#cv',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1
+            }
+        });
+
+        gsap.to(journeyTitle, {
+            y: -60,
+            scale: 0.98,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '#cv',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.5
+            }
+        });
+
+        gsap.to(journeySubtitle, {
+            y: -40,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '#cv',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 2
+            }
+        });
+
+        const journeyEm = journeyTitle.querySelector('em');
+        if (journeyEm) {
+            gsap.to(journeyEm, {
+                backgroundPosition: '200% center',
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#cv',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 0.5
+                }
+            });
+        }
+    }
+
+    // 9b. Glowing spine fill — scrub with section scroll
+    const spineFill = document.getElementById('journey-spine-fill');
+    if (spineFill) {
+        gsap.to(spineFill, {
+            height: '100%',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.journey-timeline-wrap',
+                start: 'top 70%',
+                end: 'bottom 60%',
+                scrub: 1.2,
+            }
+        });
+    }
+
+    // 9c. Cards: stagger in from alternating sides
+    gsap.utils.toArray('.journey-item').forEach((item, i) => {
+        const isLeft = item.classList.contains('journey-item--left');
+        const card   = item.querySelector('.journey-card');
+        const node   = item.querySelector('.journey-node-core');
+
+        // Card slides in from its side
+        gsap.from(card, {
+            x: isLeft ? -70 : 70,
+            opacity: 0,
+            duration: 1,
+            ease: 'power4.out',
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        // Node pops in with a spring
+        gsap.from(node, {
+            scale: 0,
+            opacity: 0,
+            duration: 0.7,
+            delay: 0.15,
+            ease: 'back.out(2)',
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        // Fade in the whole item to clear the CSS opacity:0
+        gsap.to(item, {
+            opacity: 1,
+            duration: 0.01,
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 86%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        // Subtle floating parallax while scrolling through
+        gsap.to(card, {
+            y: -30 + i * 5,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: item,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.5
+            }
+        });
+    });
+
+    // 9d. Node hover — scale up on mouseenter (vanilla JS)
+    document.querySelectorAll('.journey-node-core').forEach(core => {
+        core.addEventListener('mouseenter', () => {
+            gsap.to(core, { scale: 1.2, duration: 0.3, ease: 'back.out(2)' });
+        });
+        core.addEventListener('mouseleave', () => {
+            gsap.to(core, { scale: 1, duration: 0.3, ease: 'power2.out' });
+        });
+    });
+
+    // 9e. Ambient blob slow drift
+    gsap.utils.toArray('.journey-blob').forEach((blob, i) => {
+        gsap.to(blob, {
+            y: i % 2 === 0 ? -60 : 60,
+            x: i % 3 === 0 ? 40 : -40,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '#cv',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 2
             }
         });
     });
