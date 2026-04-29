@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // --- 0. INITIALIZE LENIS (Smooth Scroll) ---
     window.lenis = new Lenis({
         duration: 1,
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 3. SCROLL PROGRESS & NAV BACKGROUND ---
     const nav = document.querySelector('nav');
     const scrollProgress = document.getElementById('scroll-progress');
-    const backToTop = document.getElementById('back-to-top');
+    const chatbotRobo = document.getElementById('chatbot-robo-container');
 
     window.lenis.on('scroll', (e) => {
         const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -72,18 +72,168 @@ document.addEventListener('DOMContentLoaded', () => {
             nav.classList.remove('shadow-lg', 'bg-cream/95');
             nav.classList.add('bg-cream/80');
         }
+    });
 
-        // Back to top button
-        if (e.animatedScroll > 500) {
-            backToTop.classList.remove('translate-y-24', 'opacity-0');
-        } else {
-            backToTop.classList.add('translate-y-24', 'opacity-0');
+    if (chatbotRobo) {
+        const chatWindow = document.getElementById('chat-window');
+        const closeChat = document.getElementById('close-chat');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatOptions = document.getElementById('chat-options');
+
+        function addMessage(text, type = 'bot') {
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble ${type}`;
+            bubble.textContent = text;
+            chatMessages.appendChild(bubble);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-    });
 
-    backToTop.addEventListener('click', () => {
-        window.lenis.scrollTo(0);
-    });
+        function addOptions(options) {
+            chatOptions.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'chat-option-btn';
+                btn.textContent = opt.text;
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    opt.action();
+                };
+                chatOptions.appendChild(btn);
+            });
+        }
+
+        const mainMenu = () => {
+            addMessage("What can I help you with today?");
+            addOptions([
+                {
+                    text: "Resume", action: () => showResumeOptions()
+                },
+                {
+                    text: "Project", action: () => {
+                        addMessage("Project", "user");
+                        window.lenis.start();
+                        window.lenis.scrollTo('#projects');
+                        toggleChat();
+                    }
+                },
+                {
+                    text: "CV", action: () => {
+                        addMessage("CV", "user");
+                        window.lenis.start();
+                        window.lenis.scrollTo('#cv');
+                        toggleChat();
+                    }
+                },
+                {
+                    text: "Contact my Boss", action: () => showContactOptions()
+                }
+            ]);
+        };
+
+        const showResumeOptions = () => {
+            addMessage("Resume", "user");
+            addMessage("Would you like to download my boss's resume?");
+            addOptions([
+                {
+                    text: "Yes", action: () => {
+                        addMessage("Yes", "user");
+                        const link = document.createElement('a');
+                        link.href = '/CHIDESH-RESUME-CRNT.PDF';
+                        link.download = 'CHIDESH-Resume.pdf';
+                        link.click();
+                        addMessage("Starting download...");
+                        setTimeout(mainMenu, 1500);
+                    }
+                },
+                {
+                    text: "No", action: () => {
+                        addMessage("No", "user");
+                        mainMenu();
+                    }
+                }
+            ]);
+        };
+
+        const showContactOptions = () => {
+            addMessage("Contact my Boss", "user");
+            addMessage("Here are the ways to reach him:");
+            const contactLinks = `
+                <div class="flex flex-col gap-2 mt-2">
+                    <a href="mailto:chideshv@gmail.com" class="text-accent font-bold hover:underline">Email</a>
+                    <a href="tel:+919944847680" class="text-accent font-bold hover:underline">Phone</a>
+                    <a href="https://wa.me/919944847680" target="_blank" class="text-accent font-bold hover:underline">WhatsApp</a>
+                    <a href="https://github.com/iamchideshv" target="_blank" class="text-accent font-bold hover:underline">GitHub</a>
+                    <a href="https://www.instagram.com/iamchidesh" target="_blank" class="text-accent font-bold hover:underline">Instagram</a>
+                </div>
+            `;
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble bot';
+            bubble.innerHTML = contactLinks;
+            chatMessages.appendChild(bubble);
+            // Don't auto-reset menu immediately so user can click links
+            addOptions([{ text: "Back to Menu", action: mainMenu }]);
+        };
+
+        function toggleChat() {
+            chatWindow.classList.toggle('open');
+            if (chatWindow.classList.contains('open') && chatMessages.children.length === 0) {
+                startChat();
+            }
+        }
+
+        function startChat() {
+            addMessage("Say Hi to begin");
+            addOptions([
+                {
+                    text: "Hi", action: () => {
+                        addMessage("Hi", "user");
+                        mainMenu();
+                    }
+                }
+            ]);
+        }
+
+        chatbotRobo.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Little bounce animation on click
+            gsap.to(chatbotRobo, {
+                y: -15,
+                duration: 0.2,
+                yoyo: true,
+                repeat: 1,
+                ease: "power2.out"
+            });
+            toggleChat();
+        });
+
+        if (closeChat) {
+            closeChat.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleChat();
+            });
+        }
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (chatWindow.classList.contains('open') && !chatWindow.contains(e.target) && !chatbotRobo.contains(e.target)) {
+                toggleChat();
+            }
+        });
+
+        // Fix scroll hijacking: Stop Lenis when cursor is inside chat
+        chatWindow.addEventListener('mouseenter', () => {
+            window.lenis.stop();
+        });
+
+        chatWindow.addEventListener('mouseleave', () => {
+            window.lenis.start();
+        });
+
+        // Prevent wheel event from bubbling to Lenis
+        chatWindow.addEventListener('wheel', (e) => {
+            e.stopPropagation();
+        }, { passive: true });
+    }
 
     // --- 4. CONTACT FORM HANDLING (Web3Forms) ---
     const contactForm = document.getElementById('contact-form');

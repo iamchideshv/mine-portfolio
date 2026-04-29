@@ -244,8 +244,10 @@ body {
 }
 
 html {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
 }
 
 /* TYPOGRAPHY POLISH */
@@ -1135,7 +1137,7 @@ h3 {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-    }
+}
 }
 
 /* MOBILE RESPONSIVE TWEAKS */
@@ -1143,16 +1145,91 @@ h3 {
     .lang-floating-words {
         display: none;
     }
-    
+
     .contact-form-card {
         padding: 1.5rem;
     }
-    
+
     .journey-title {
         font-size: 3rem !important;
     }
-    
+
     .project-card h3 {
         font-size: 2.5rem !important;
     }
+}
+
+/* KIRA CHAT WINDOW */
+#chat-window.open {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.animate-gradient {
+    animation: gradient 3s linear infinite;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+.chat-bubble {
+    padding: 12px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    max-width: 85%;
+    line-height: 1.5;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.chat-bubble.bot {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--ink);
+    backdrop-filter: blur(5px);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.chat-bubble.user {
+    background: var(--accent);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-option-btn {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+}
+
+.chat-option-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(232, 87, 42, 0.2);
+}
+
+.chat-option-btn:active {
+    transform: scale(0.95);
+}
+
+#chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
 }
