@@ -292,6 +292,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 scrub: 1.5
             }
         });
+
+        // 9f. Node activation on scroll (matching spine fill)
+        const ring = item.querySelector('.journey-node-ring');
+        if (node && ring) {
+            ScrollTrigger.create({
+                trigger: node,
+                start: "center 70%",
+                onEnter: () => {
+                    node.classList.add('active');
+                    ring.classList.add('active');
+                },
+                onLeaveBack: () => {
+                    node.classList.remove('active');
+                    ring.classList.remove('active');
+                }
+            });
+        }
     });
 
     // 9d. Node hover — scale up on mouseenter (vanilla JS)

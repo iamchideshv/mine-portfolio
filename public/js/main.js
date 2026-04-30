@@ -77,7 +77,150 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (chatbotRobo) {
-        // ... (rest of chatbot logic stays the same) ...
+        const chatWindow = document.getElementById('chat-window');
+        const closeChat = document.getElementById('close-chat');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatOptions = document.getElementById('chat-options');
+        const chatInput = document.getElementById('chat-input');
+        const sendChat = document.getElementById('send-chat');
+
+        let isChatOpen = false;
+
+        const toggleChat = () => {
+            isChatOpen = !isChatOpen;
+            chatWindow.classList.toggle('open');
+            if (isChatOpen && chatMessages.children.length === 0) {
+                setTimeout(sendGreeting, 500);
+            }
+        };
+
+        chatbotRobo.addEventListener('click', toggleChat);
+        closeChat.addEventListener('click', toggleChat);
+
+        function addMessage(text, type = 'bot') {
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble ${type}`;
+            bubble.innerHTML = text;
+            chatMessages.appendChild(bubble);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            gsap.from(bubble, {
+                y: 10,
+                opacity: 0,
+                duration: 0.4,
+                ease: "power2.out"
+            });
+        }
+
+        function clearOptions() {
+            chatOptions.innerHTML = '';
+        }
+
+        function addOption(text, callback) {
+            const btn = document.createElement('button');
+            btn.className = 'chat-option-btn';
+            btn.textContent = text;
+            btn.onclick = callback;
+            chatOptions.appendChild(btn);
+        }
+
+        function sendGreeting() {
+            addMessage("Hi! I'm Kira, Chidesh's AI assistant. 👋");
+            addMessage("How can I help you today?");
+            showMainOptions();
+        }
+
+        function showMainOptions() {
+            clearOptions();
+            addOption("Resume", handleResume);
+            addOption("CV", handleCV);
+            addOption("Contact my boss", handleContact);
+        }
+
+        function handleResume() {
+            addMessage("Resume", 'user');
+            setTimeout(() => {
+                addMessage("Do you want to download my resume?");
+                clearOptions();
+                addOption("Yes, download", () => {
+                    addMessage("Yes, download", 'user');
+                    window.open('/CHIDESH-RESUME-CRNT.PDF', '_blank');
+                    setTimeout(() => {
+                        addMessage("Download started! Anything else?");
+                        showMainOptions();
+                    }, 500);
+                });
+                addOption("No, thanks", () => {
+                    addMessage("No, thanks", 'user');
+                    setTimeout(() => {
+                        addMessage("No problem! What else can I do for you?");
+                        showMainOptions();
+                    }, 500);
+                });
+            }, 500);
+        }
+
+        function handleCV() {
+            addMessage("CV", 'user');
+            setTimeout(() => {
+                addMessage("Sure! Let's take a look at my journey.");
+                window.lenis.scrollTo('#cv', {
+                    offset: -80,
+                    duration: 1.5
+                });
+                setTimeout(showMainOptions, 1000);
+            }, 500);
+        }
+
+        function handleContact() {
+            addMessage("Contact my boss", 'user');
+            setTimeout(() => {
+                addMessage("Here are the ways you can reach Chidesh:");
+                const contactCard = `
+                    <div class="chat-contact-card">
+                        <a href="mailto:chideshv@gmail.com" class="chat-contact-item">
+                            <i class="fa-solid fa-envelope text-accent"></i> chideshv@gmail.com
+                        </a>
+                        <a href="tel:+919944847680" class="chat-contact-item">
+                            <i class="fa-solid fa-phone text-accent"></i> +91 99448 47680
+                        </a>
+                        <a href="https://wa.me/919944847680" target="_blank" class="chat-contact-item">
+                            <i class="fa-brands fa-whatsapp text-accent"></i> WhatsApp
+                        </a>
+                        <a href="https://github.com/iamchideshv" target="_blank" class="chat-contact-item">
+                            <i class="fa-brands fa-github text-accent"></i> GitHub
+                        </a>
+                        <a href="https://www.instagram.com/iamchidesh" target="_blank" class="chat-contact-item">
+                            <i class="fa-brands fa-instagram text-accent"></i> Instagram
+                        </a>
+                    </div>
+                `;
+                addMessage(contactCard);
+                setTimeout(showMainOptions, 1000);
+            }, 500);
+        }
+
+        function handleUserInput() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            setTimeout(() => {
+                if (text.toLowerCase().includes('hi') || text.toLowerCase().includes('hello')) {
+                    addMessage("Hello there! How can I assist you?");
+                } else {
+                    addMessage("I'm still learning! Please use the quick options or contact Chidesh directly for more info.");
+                }
+                showMainOptions();
+            }, 700);
+        }
+
+        sendChat.addEventListener('click', handleUserInput);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleUserInput();
+        });
     }
 
     // --- 4. CONTACT FORM HANDLING (Web3Forms) ---

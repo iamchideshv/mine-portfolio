@@ -273,6 +273,7 @@ h3 {
     color: #fff;
     padding: 0;
     min-height: 100vh;
+    overflow: visible;
 }
 
 /* Ambient Blobs */
@@ -414,6 +415,63 @@ h3 {
     will-change: transform, opacity;
 }
 
+/* ── Node base styles ── */
+.journey-node {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 4;
+}
+
+.journey-node-core.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    box-shadow: 0 0 25px var(--accent);
+}
+
+.journey-node-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid rgba(232, 87, 42, 0.25);
+    opacity: 0.3;
+    transition: all 0.5s ease;
+    animation: pulse-ring 3s ease-in-out infinite;
+}
+
+.journey-node-ring.active {
+    opacity: 1;
+    inset: -12px;
+    border-color: var(--accent);
+}
+
+@keyframes pulse-ring {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+.journey-node-core {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.journey-node-core:hover {
+    transform: scale(1.1);
+}
+
 /* Left item: card â†’ col 1, node â†’ col 2, col 3 empty */
 .journey-item--left .journey-card {
     grid-column: 1;
@@ -425,12 +483,21 @@ h3 {
 
 .journey-item--left .journey-node {
     grid-column: 2;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    color: var(--accent);
-    box-shadow: 0 0 20px rgba(232, 87, 42, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    grid-row: 1;
+}
+
+/* Right item: col 1 empty, node â†’ col 2, card â†’ col 3 */
+.journey-item--right .journey-card {
+    grid-column: 3;
+    grid-row: 1;
+    margin-left: 20px;
+    margin-right: 0;
+    text-align: left;
+}
+
+.journey-item--right .journey-node {
+    grid-column: 2;
+    grid-row: 1;
 }
 
 .journey-node-core--gold {
@@ -857,7 +924,12 @@ h3 {
     inset: -10px;
     border: 2px solid #3b82f6;
     border-radius: 50%;
-    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    animation: contact-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes contact-ping {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(3); opacity: 0; }
 }
 
 .contact-marker-label {
@@ -873,6 +945,12 @@ h3 {
     font-weight: 700;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    animation: contact-float 3s ease-in-out infinite;
+}
+
+@keyframes contact-float {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -8px); }
 }
 
 }
@@ -927,12 +1005,12 @@ h3 {
 }
 
 .chat-bubble.bot {
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--ink);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
     backdrop-filter: blur(5px);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .chat-bubble.user {
@@ -940,6 +1018,32 @@ h3 {
     color: white;
     align-self: flex-end;
     border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 15px rgba(232, 87, 42, 0.2);
+}
+
+.chat-contact-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 12px;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.chat-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.chat-contact-item:hover {
+    color: var(--accent);
 }
 
 .chat-option-btn {
@@ -1110,8 +1214,8 @@ h3 {
 
 /* FOOTER STYLES */
 footer {
-    border-top: 1px solid var(--border);
-    background: var(--cream);
+    border-top: none;
+    background: transparent;
 }
 
 .footer-link {
