@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         main: 'index.html',
         portfolio: 'portfolio.html',
+        services: 'services.html',
       },
     },
   },

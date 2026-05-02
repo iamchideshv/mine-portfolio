@@ -1006,7 +1006,7 @@ h3 {
 
 .chat-bubble.bot {
     background: rgba(255, 255, 255, 0.1);
-    color: white;
+    color: var(--ink);
     backdrop-filter: blur(5px);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
@@ -1037,7 +1037,7 @@ h3 {
     align-items: center;
     gap: 10px;
     font-size: 0.8rem;
-    color: white;
+    color: var(--ink);
     text-decoration: none;
     transition: color 0.3s;
 }
