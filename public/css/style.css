@@ -879,6 +879,17 @@ h3 {
         font-size: 2.25rem !important;
     }
 
+    /* --- FOOTER SOCIAL ICONS — single horizontal row --- */
+    footer .flex.flex-wrap.justify-center.gap-8 {
+        flex-wrap: nowrap !important;
+        gap: 1.25rem !important;
+        justify-content: center !important;
+    }
+
+    footer .flex.flex-wrap.justify-center.gap-8 a {
+        font-size: 1.4rem !important;
+    }
+
 }
 
 /* Languages Section — Creative Overhaul */
