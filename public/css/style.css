@@ -880,13 +880,13 @@ h3 {
     }
 
     /* --- FOOTER SOCIAL ICONS — single horizontal row --- */
-    footer .flex.flex-wrap.justify-center.gap-8 {
+    #footer-socials {
         flex-wrap: nowrap !important;
         gap: 1.25rem !important;
         justify-content: center !important;
     }
 
-    footer .flex.flex-wrap.justify-center.gap-8 a {
+    #footer-socials a {
         font-size: 1.4rem !important;
     }
 
