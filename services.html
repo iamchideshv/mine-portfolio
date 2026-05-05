@@ -289,7 +289,8 @@
       border-radius: inherit;
       background: radial-gradient(500px at var(--mx, 50%) var(--my, 50%), rgba(232, 87, 42, 0.07), transparent 70%);
       opacity: 0;
-      transition: opacity 0.4s
+      transition: opacity 0.4s;
+      pointer-events: none
     }
 
     .svc-card:hover::before {
@@ -1003,10 +1004,10 @@
               <li>Performance optimization & SEO</li>
               <li>Deployment on AWS, Vercel, Netlify</li>
             </ul>
-            <a href="#contact" class="build-btn">
+            <button type="button" class="build-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
               <span>Let's Build</span>
               <i class="fa-solid fa-arrow-right"></i>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -1030,10 +1031,10 @@
               <li>App Store & Play Store publishing</li>
               <li>Backend integration & API services</li>
             </ul>
-            <a href="#contact" class="build-btn">
+            <button type="button" class="build-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
               <span>Let's Build</span>
               <i class="fa-solid fa-arrow-right"></i>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -1057,10 +1058,10 @@
               <li>Lead generation & customer support bots</li>
               <li>Multi-language support</li>
             </ul>
-            <a href="#contact" class="build-btn">
+            <button type="button" class="build-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
               <span>Let's Build</span>
               <i class="fa-solid fa-arrow-right"></i>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -1084,10 +1085,10 @@
               <li>Python, TensorFlow, PyTorch, Scikit-learn</li>
               <li>Model deployment & MLOps pipelines</li>
             </ul>
-            <a href="#contact" class="build-btn">
+            <button type="button" class="build-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
               <span>Let's Build</span>
               <i class="fa-solid fa-arrow-right"></i>
-            </a>
+            </button>
           </div>
         </div>
 
