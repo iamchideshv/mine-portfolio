@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <a href="tel:+919944847680" class="chat-contact-item">
                             <i class="fa-solid fa-phone text-accent"></i> +91 99448 47680
                         </a>
-                        <a href="https://wa.me/919944847680" target="_blank" class="chat-contact-item">
+                        <a href="https://wa.me/919944847680?text=Hi%20Chidesh!%20I%20saw%20your%20portfolio%20and%20would%20love%20to%20connect." target="_blank" class="chat-contact-item">
                             <i class="fa-brands fa-whatsapp text-accent"></i> WhatsApp
                         </a>
                         <a href="https://github.com/iamchideshv" target="_blank" class="chat-contact-item">
