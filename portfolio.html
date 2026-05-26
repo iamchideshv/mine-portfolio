@@ -103,7 +103,8 @@
 
             <!-- Desktop Nav -->
             <ul class="hidden md:flex items-center gap-8">
-                <li><a href="/index.html" class="nav-link relative py-1 hover:text-accent transition-colors">Home</a></li>
+                <li><a href="/index.html" class="nav-link relative py-1 hover:text-accent transition-colors">Home</a>
+                </li>
                 <li><a href="#skills" class="nav-link relative py-1 hover:text-accent transition-colors">Skills</a></li>
                 <li><a href="#projects" class="nav-link relative py-1 hover:text-accent transition-colors">Projects</a>
                 </li>
@@ -392,7 +393,7 @@
                 class="absolute top-20 right-20 text-[200px] font-black text-ink opacity-[0.04] pointer-events-none leading-none hidden lg:block">03</span>
             <div class="container mx-auto px-6 mb-20">
                 <span class="text-accent font-bold uppercase tracking-widest text-sm">Portfolio</span>
-                <h2 class="text-4xl md:text-6xl font-black mt-4">Selected <span class="font-serif font-bold">Work</span>
+                <h2 class="text-4xl md:text-6xl font-black mt-4">Project <span class="font-serif font-bold">Work</span>
                 </h2>
                 <p class="text-muted mt-4">Projects I've Built & Shipped</p>
             </div>
@@ -910,7 +911,8 @@
         <div id="chatbot-bubble"
             class="absolute bottom-full right-0 mb-4 px-4 py-2 bg-white/90 backdrop-blur-md border border-border rounded-2xl shadow-xl opacity-0 translate-y-4 pointer-events-none transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
             <p class="text-sm font-bold text-ink whitespace-nowrap">Hi! I'm Kira. Need help? 👋</p>
-            <div class="absolute bottom-[-6px] right-8 w-3 h-3 bg-white/90 border-r border-b border-border rotate-45"></div>
+            <div class="absolute bottom-[-6px] right-8 w-3 h-3 bg-white/90 border-r border-b border-border rotate-45">
+            </div>
         </div>
         <!-- Lottie Robot -->
         <div class="w-20 h-20 md:w-28 md:h-28 hover:scale-110 transition-transform duration-300 drop-shadow-2xl">
@@ -924,13 +926,16 @@
         class="fixed bottom-32 right-6 w-[320px] bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[2rem] shadow-2xl z-[60] overflow-hidden flex flex-col scale-0 opacity-0 origin-bottom-right transition-all duration-500"
         data-lenis-prevent>
         <!-- Header -->
-        <div class="p-6 bg-gradient-to-r from-accent to-accentLight text-white flex items-center justify-between shadow-lg">
+        <div
+            class="p-6 bg-gradient-to-r from-accent to-accentLight text-white flex items-center justify-between shadow-lg">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
+                <div
+                    class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
                     <i class="fa-solid fa-robot text-lg text-accentLight animate-pulse"></i>
                 </div>
                 <span class="font-bold tracking-tight text-lg">
-                    Chat with <span class="bg-gradient-to-r from-accentLight via-white to-accentLight bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">Kira</span>
+                    Chat with <span
+                        class="bg-gradient-to-r from-accentLight via-white to-accentLight bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">Kira</span>
                 </span>
             </div>
             <button id="close-chat" class="hover:rotate-90 transition-transform duration-300">
@@ -947,9 +952,10 @@
         </div>
         <!-- Chat Input -->
         <div class="p-4 bg-white/10 border-t border-white/10 flex items-center gap-2">
-            <input type="text" id="chat-input" placeholder="Say hi to begin..." 
+            <input type="text" id="chat-input" placeholder="Say hi to begin..."
                 class="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-ink focus:outline-none focus:border-accent transition-colors">
-            <button id="send-chat" class="w-9 h-9 rounded-full bg-accent text-white flex items-center justify-center hover:scale-110 transition-transform">
+            <button id="send-chat"
+                class="w-9 h-9 rounded-full bg-accent text-white flex items-center justify-center hover:scale-110 transition-transform">
                 <i class="fa-solid fa-paper-plane text-xs"></i>
             </button>
         </div>
