@@ -1,11 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAW6w_NF6h8UifE7hF-IcohqomYgsjW6C0",
   authDomain: "chideshportfolio.firebaseapp.com",
@@ -19,6 +18,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize Auth & Firestore
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Initialize Analytics
 let analytics = null;
 isSupported().then((supported) => {
   if (supported) {
@@ -29,8 +33,10 @@ isSupported().then((supported) => {
   console.warn("Firebase Analytics could not be initialized:", err);
 });
 
-// Expose globally for convenience
+// Expose globally so portfolio.html inline script can use them
 window.firebaseApp = app;
+window.firebaseAuth = auth;
+window.firebaseDB = db;
 window.getFirebaseAnalytics = () => analytics;
 
-export { app, analytics };
+export { app, auth, db, analytics };

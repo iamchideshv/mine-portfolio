@@ -50,6 +50,9 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+    <!-- Firebase SDK (for OTP Auth + Firestore) -->
+    <script type="module" src="/firebase.js"></script>
+
     <!-- Tailwind Config -->
     <script>
         tailwind.config = {
@@ -95,6 +98,105 @@
             </div>
         </div>
     </div>
+
+    <!-- ===== OTP MODAL ===== -->
+    <div id="otp-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:24px;padding:2.5rem 2rem;width:90%;max-width:420px;box-shadow:0 32px 80px rgba(0,0,0,0.25);position:relative;font-family:'Outfit',sans-serif;">
+        <!-- Close -->
+        <button onclick="closeOTPModal()" style="position:absolute;top:1rem;right:1.2rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;">&times;</button>
+
+        <!-- Step 1: Phone Number -->
+        <div id="otp-step-phone">
+          <div style="text-align:center;margin-bottom:1.5rem;">
+            <div style="width:56px;height:56px;background:linear-gradient(135deg,#E8182A,#ff6b6b);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+              <svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1v3.5a1 1 0 01-1 1C6.72 21.5 2.5 17.28 2.5 4.5a1 1 0 011-1H7a1 1 0 011 1c0 1.25.2 2.46.57 3.58a1 1 0 01-.24 1.01l-2.71 2.7z"/></svg>
+            </div>
+            <h2 style="font-size:1.4rem;font-weight:800;color:#1a1a1a;margin:0 0 .4rem;">Access Resume</h2>
+            <p style="color:#888;font-size:.9rem;margin:0;">Enter your phone number to receive a one-time code</p>
+          </div>
+
+          <div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+            <select id="otp-country" style="padding:.85rem .6rem;border:2px solid #e5e5e5;border-radius:12px;font-size:.9rem;font-family:inherit;background:#fafafa;outline:none;width:110px;flex-shrink:0;">
+              <option value="+91">🇮🇳 +91</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+971">🇦🇪 +971</option>
+              <option value="+65">🇸🇬 +65</option>
+              <option value="+60">🇲🇾 +60</option>
+              <option value="+61">🇦🇺 +61</option>
+              <option value="+49">🇩🇪 +49</option>
+              <option value="+33">🇫🇷 +33</option>
+              <option value="+81">🇯🇵 +81</option>
+            </select>
+            <input id="otp-phone" type="tel" placeholder="Phone number" maxlength="12"
+              style="flex:1;padding:.85rem 1rem;border:2px solid #e5e5e5;border-radius:12px;font-size:1rem;font-family:inherit;outline:none;transition:border .2s;"
+              onfocus="this.style.borderColor='#E8182A'" onblur="this.style.borderColor='#e5e5e5'" />
+          </div>
+
+          <!-- invisible recaptcha container -->
+          <div id="recaptcha-container"></div>
+
+          <button id="otp-send-btn" onclick="sendOTP()"
+            style="width:100%;padding:.95rem;background:linear-gradient(135deg,#E8182A,#c0121f);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;font-family:inherit;">
+            Send OTP
+          </button>
+          <p id="otp-phone-err" style="color:#E8182A;font-size:.82rem;margin:.5rem 0 0;text-align:center;display:none;"></p>
+        </div>
+
+        <!-- Step 2: OTP Code -->
+        <div id="otp-step-code" style="display:none;">
+          <div style="text-align:center;margin-bottom:1.5rem;">
+            <div style="width:56px;height:56px;background:linear-gradient(135deg,#E8182A,#ff6b6b);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+              <svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14l-3-3 1.41-1.41L11 12.17l4.59-4.58L17 9l-6 6z"/></svg>
+            </div>
+            <h2 style="font-size:1.4rem;font-weight:800;color:#1a1a1a;margin:0 0 .4rem;">Enter OTP</h2>
+            <p id="otp-sent-hint" style="color:#888;font-size:.9rem;margin:0;">Code sent to your number</p>
+          </div>
+
+          <div style="display:flex;gap:.6rem;justify-content:center;margin-bottom:1.2rem;" id="otp-boxes">
+            <input class="otp-box" maxlength="1" type="text" inputmode="numeric"
+              style="width:48px;height:56px;text-align:center;font-size:1.5rem;font-weight:700;border:2px solid #e5e5e5;border-radius:12px;outline:none;font-family:inherit;transition:border .2s;"
+              onfocus="this.style.borderColor='#E8182A'" onblur="this.style.borderColor='#e5e5e5'" />
+            <input class="otp-box" maxlength="1" type="text" inputmode="numeric"
+              style="width:48px;height:56px;text-align:center;font-size:1.5rem;font-weight:700;border:2px solid #e5e5e5;border-radius:12px;outline:none;font-family:inherit;transition:border .2s;"
+              onfocus="this.style.borderColor='#E8182A'" onblur="this.style.borderColor='#e5e5e5'" />
+            <input class="otp-box" maxlength="1" type="text" inputmode="numeric"
+              style="width:48px;height:56px;text-align:center;font-size:1.5rem;font-weight:700;border:2px solid #e5e5e5;border-radius:12px;outline:none;font-family:inherit;transition:border .2s;"
+              onfocus="this.style.borderColor='#E8182A'" onblur="this.style.borderColor='#e5e5e5'" />
+            <input class="otp-box" maxlength="1" type="text" inputmode="numeric"
+              style="width:48px;height:56px;text-align:center;font-size:1.5rem;font-weight:700;border:2px solid #e5e5e5;border-radius:12px;outline:none;font-family:inherit;transition:border .2s;"
+              onfocus="this.style.borderColor='#E8182A'" onblur="this.style.borderColor='#e5e5e5'" />
+            <input class="otp-box" maxlength="1" type="text" inputmode="numeric"
+              style="width:48px;height:56px;text-align:center;font-size:1.5rem;font-weight:700;border:2px solid #e5e5e5;border-radius:12px;outline:none;font-family:inherit;transition:border .2s;"
+              onfocus="this.style.borderColor='#E8182A'" onblur="this.style.borderColor='#e5e5e5'" />
+            <input class="otp-box" maxlength="1" type="text" inputmode="numeric"
+              style="width:48px;height:56px;text-align:center;font-size:1.5rem;font-weight:700;border:2px solid #e5e5e5;border-radius:12px;outline:none;font-family:inherit;transition:border .2s;"
+              onfocus="this.style.borderColor='#E8182A'" onblur="this.style.borderColor='#e5e5e5'" />
+          </div>
+
+          <button id="otp-verify-btn" onclick="verifyOTP()"
+            style="width:100%;padding:.95rem;background:linear-gradient(135deg,#E8182A,#c0121f);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;">
+            Verify &amp; Download
+          </button>
+          <p id="otp-code-err" style="color:#E8182A;font-size:.82rem;margin:.5rem 0 0;text-align:center;display:none;"></p>
+          <p style="text-align:center;margin-top:.8rem;font-size:.82rem;color:#aaa;">
+            Didn't receive it? <span onclick="backToPhone()" style="color:#E8182A;cursor:pointer;font-weight:600;">Resend</span>
+          </p>
+        </div>
+
+        <!-- Step 3: Success -->
+        <div id="otp-step-success" style="display:none;text-align:center;padding:.5rem 0;">
+          <div style="width:70px;height:70px;background:#f0fff4;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+            <svg width="36" height="36" fill="#22c55e" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          </div>
+          <h2 style="font-size:1.4rem;font-weight:800;color:#1a1a1a;margin:0 0 .4rem;">Verified!</h2>
+          <p style="color:#888;font-size:.9rem;margin:0 0 1.5rem;">Your resume is downloading...</p>
+          <button onclick="closeOTPModal()"
+            style="padding:.7rem 2rem;background:#1a1a1a;color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;">Close</button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== /OTP MODAL ===== -->
 
     <!-- CUSTOM CURSOR -->
     <div id="cursor-dot" class="fixed top-0 left-0 w-2 h-2 bg-accent rounded-full pointer-events-none z-[9999] hidden">
@@ -1289,6 +1391,137 @@
                 });
             }
         });
+    </script>
+
+    <!-- OTP LOGIC -->
+    <script type="module">
+      import { RecaptchaVerifier, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+      import { collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+
+      let confirmationResult = null;
+      let pendingPhone = '';
+
+      // ── Helpers ──────────────────────────────────────────────────────────
+      function showStep(id) {
+        ['otp-step-phone','otp-step-code','otp-step-success'].forEach(s => {
+          document.getElementById(s).style.display = s === id ? 'block' : 'none';
+        });
+      }
+
+      function setLoading(btnId, loading, label) {
+        const btn = document.getElementById(btnId);
+        btn.disabled = loading;
+        btn.style.opacity = loading ? '.6' : '1';
+        btn.textContent = loading ? '...' : label;
+      }
+
+      function showErr(elId, msg) {
+        const el = document.getElementById(elId);
+        el.textContent = msg;
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 5000);
+      }
+
+      // ── OTP Box auto-advance ──────────────────────────────────────────────
+      document.querySelectorAll('.otp-box').forEach((box, idx, arr) => {
+        box.addEventListener('input', () => {
+          if (box.value && idx < arr.length - 1) arr[idx + 1].focus();
+        });
+        box.addEventListener('keydown', e => {
+          if (e.key === 'Backspace' && !box.value && idx > 0) arr[idx - 1].focus();
+        });
+      });
+
+      // ── Open / Close ─────────────────────────────────────────────────────
+      window.openOTPModal = function() {
+        const modal = document.getElementById('otp-modal');
+        modal.style.display = 'flex';
+        showStep('otp-step-phone');
+        if (window.lenis) window.lenis.stop();
+      };
+
+      window.closeOTPModal = function() {
+        document.getElementById('otp-modal').style.display = 'none';
+        if (window.lenis) window.lenis.start();
+      };
+
+      window.backToPhone = function() { showStep('otp-step-phone'); };
+
+      // ── Send OTP ─────────────────────────────────────────────────────────
+      window.sendOTP = async function() {
+        const phoneRaw = document.getElementById('otp-phone').value.trim().replace(/\D/g,'');
+        const cc = document.getElementById('otp-country').value;
+        if (!phoneRaw || phoneRaw.length < 7) { showErr('otp-phone-err','Enter a valid phone number.'); return; }
+
+        pendingPhone = cc + phoneRaw;
+        setLoading('otp-send-btn', true, 'Sending...');
+
+        try {
+          const auth = window.firebaseAuth;
+          // Reset recaptcha if it exists
+          if (window._recaptchaVerifier) {
+            window._recaptchaVerifier.clear();
+          }
+          window._recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
+
+          confirmationResult = await signInWithPhoneNumber(auth, pendingPhone, window._recaptchaVerifier);
+          document.getElementById('otp-sent-hint').textContent = `Code sent to ${pendingPhone}`;
+          showStep('otp-step-code');
+          document.querySelector('.otp-box').focus();
+        } catch (err) {
+          console.error(err);
+          showErr('otp-phone-err', err.message || 'Failed to send OTP. Try again.');
+        } finally {
+          setLoading('otp-send-btn', false, 'Send OTP');
+        }
+      };
+
+      // ── Verify OTP ───────────────────────────────────────────────────────
+      window.verifyOTP = async function() {
+        const code = [...document.querySelectorAll('.otp-box')].map(b => b.value).join('');
+        if (code.length !== 6) { showErr('otp-code-err','Enter the 6-digit code.'); return; }
+
+        setLoading('otp-verify-btn', true, 'Verifying...');
+        try {
+          await confirmationResult.confirm(code);
+
+          // ── Save to Firestore ────────────────────────────────────────────
+          const db = window.firebaseDB;
+          await addDoc(collection(db, 'resumeDownloads'), {
+            phone: pendingPhone,
+            downloadedAt: serverTimestamp(),
+            userAgent: navigator.userAgent,
+            referrer: document.referrer || 'direct',
+            page: window.location.href
+          });
+
+          // ── Trigger download ─────────────────────────────────────────────
+          const link = document.createElement('a');
+          link.href = '/ChideshV_Resume.pdf';
+          link.download = 'ChideshV_Resume.pdf';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          showStep('otp-step-success');
+        } catch (err) {
+          console.error(err);
+          showErr('otp-code-err', 'Invalid OTP. Please try again.');
+        } finally {
+          setLoading('otp-verify-btn', false, 'Verify & Download');
+        }
+      };
+
+      // ── Intercept Download Resume button ─────────────────────────────────
+      document.addEventListener('DOMContentLoaded', () => {
+        const resumeBtn = document.querySelector('a[href="/ChideshV_Resume.pdf"]');
+        if (resumeBtn) {
+          resumeBtn.addEventListener('click', e => {
+            e.preventDefault();
+            window.openOTPModal();
+          });
+        }
+      });
     </script>
 </body>
 
