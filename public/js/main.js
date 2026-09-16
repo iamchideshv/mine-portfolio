@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearOptions();
                 addOption("Yes, download", () => {
                     addMessage("Yes, download", 'user');
-                    window.open('/CHIDESH-RESUME-CRNT.PDF', '_blank');
+                    window.open('/Chidesh_V_Resume.pdf', '_blank');
                     setTimeout(() => {
                         addMessage("Download started! Anything else?");
                         showMainOptions();
