@@ -6,13 +6,12 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAW6w_NF6h8UifE7hF-IcohqomYgsjW6C0",
-  authDomain: "chideshportfolio.firebaseapp.com",
-  projectId: "chideshportfolio",
-  storageBucket: "chideshportfolio.firebasestorage.app",
-  messagingSenderId: "534013511251",
-  appId: "1:534013511251:web:932bd80fae226c721aa8a6",
-  measurementId: "G-TMVHJQF5EK"
+  apiKey: "AIzaSyAU10VG1svxRALC7EMdR1A8mV66Hn9g07E",
+  authDomain: "chidesh-portfolio-site.firebaseapp.com",
+  projectId: "chidesh-portfolio-site",
+  storageBucket: "chidesh-portfolio-site.firebasestorage.app",
+  messagingSenderId: "198695072113",
+  appId: "1:198695072113:web:403976b12eaefece8746d0"
 };
 
 // Initialize Firebase
